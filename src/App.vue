@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    111
+  <div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -10,5 +10,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
+// 以下两种都可以，任君选择
+// @import './styles/base.less';
+
+@import url("~@/styles/base.less");
 </style>
