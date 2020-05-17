@@ -8,25 +8,27 @@
         <span class="sub-title">用户登录</span>
       </div>
       <!-- form表单部分 -->
-      <el-form class="login-form">
-        <el-form-item>
+      <el-form :model="loginForm" :rules="rules" class="login-form">
+        <el-form-item prop="phone">
           <el-input
             prefix-icon="el-icon-user"
             placeholder="请输入手机号"
+            v-model="loginForm.phone"
           ></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="password">
           <el-input
-            v-model="test"
+            v-model="loginForm.password"
             prefix-icon="el-icon-lock"
             placeholder="请输入密码"
             show-password
           ></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="code">
           <el-row :gutter="18">
             <el-col :span="16">
               <el-input
+                v-model="loginForm.code"
                 prefix-icon="el-icon-key"
                 placeholder="请输入验证码"
               ></el-input>
@@ -63,9 +65,41 @@
 
 <script>
 export default {
+  name: "Login",
   data() {
     return {
-      test: "",
+      loginForm: {
+        // 模型
+        phone: "", // 手机号
+        password: "", // 密码
+        code: "", // 验证码
+      },
+      rules: {
+        // 校验规则
+        phone: [
+          // 是个数组，代表这个里面可以写多个校验规则
+          { required: true, message: "必须输入手机号", trigger: "blur" },
+          { min: 11, max: 11, message: "手机号必须是11位", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "必须输入密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 12,
+            message: "长度在 6 到 12 个字符",
+            trigger: "blur",
+          },
+        ],
+        code: [
+          { required: true, message: "必须输入验证码", trigger: "blur" },
+          {
+            min: 4,
+            max: 4,
+            message: "长度必须是4位",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
 };
