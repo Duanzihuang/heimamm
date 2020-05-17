@@ -68,6 +68,8 @@
 </template>
 
 <script>
+// 按需导入
+import { setToken } from '@/utils/token'
 export default {
   name: "Login",
   data() {
@@ -136,6 +138,47 @@ export default {
       },
     };
   },
+  async created() {
+    // function promiseTest() {
+    //   const promise = new Promise((resolve, reject) => {
+    //     const r = Math.random();
+    //     console.log(r);
+    //     setTimeout(() => {
+    //       if (r > 0.5) {
+    //         resolve("成功之后的结果");
+    //       } else {
+    //         reject("失败");
+    //       }
+    //     }, 2000);
+    //   });
+    //   return promise
+    // }
+    // const res = await promiseTest()
+    // console.log(res)
+    // const res2 = await xxx(res)
+    // const res3 = await yyy(res2)
+    /**
+    promiseTest().then(res => {
+      console.log(res)
+      xxx(res).then(res2 => {
+        yyy(res2).then(res3 => {
+          ...
+        })
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+     */
+    /** 
+    promise
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      */
+  },
   methods: {
     // 获取验证码
     getCode() {
@@ -146,14 +189,15 @@ export default {
     },
     // 登录
     loginClick() {
-      this.$refs.loginFormRef.validate((valid) => {
+      this.$refs.loginFormRef.validate(async (valid) => {
         if (!valid) return;
 
         // 发请求给后台进行登录
+        /**
         this.$axios.post("/login", this.loginForm).then((res) => {
           if (res.data.code === 200) {
             this.$message({
-              message: '登录成功~',
+              message: "登录成功~",
               type: "success",
             });
           } else {
@@ -165,6 +209,29 @@ export default {
               (new Date() - 0);
           }
         });
+         */
+        const res = await this.$axios.post("/login", this.loginForm);
+
+        if (res.data.code === 200) {
+          // 提示
+          this.$message({
+            message: "登录成功~",
+            type: "success",
+          });
+
+          // 保存token
+          setToken(res.data.data.token)
+
+          // 跳转到后台管理页面
+          this.$router.push('/layout')
+        } else {
+          this.$message.error(res.data.message);
+
+          this.codeURL =
+            process.env.VUE_APP_BASEURL +
+            "/captcha?type=login&t=" +
+            (new Date() - 0);
+        }
       });
     },
   },
