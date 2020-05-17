@@ -41,8 +41,8 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item>
-          <el-checkbox></el-checkbox>
+        <el-form-item prop="isCheck">
+          <el-checkbox v-model="loginForm.isCheck"></el-checkbox>
           我已阅读并同意<el-link type="primary" href="http://www.baidu.com"
             >用户协议</el-link
           >和<el-link type="primary" href="http://www.baidu.com"
@@ -73,13 +73,30 @@ export default {
         phone: "", // 手机号
         password: "", // 密码
         code: "", // 验证码
+        isCheck: false, // 是否勾选了用户协议
       },
       rules: {
         // 校验规则
         phone: [
           // 是个数组，代表这个里面可以写多个校验规则
-          { required: true, message: "必须输入手机号", trigger: "blur" },
-          { min: 11, max: 11, message: "手机号必须是11位", trigger: "blur" },
+          // { required: true, message: "必须输入手机号", trigger: "blur" },
+          // { min: 11, max: 11, message: "手机号必须是11位", trigger: "blur" },
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error("手机号不能为空"));
+              }
+
+              // 手机号的正则表达式
+              const reg = /^1[3456789][0-9]{9}$/;
+              if (!reg.test(value)) {
+                return callback(new Error("手机号不合法"));
+              }
+
+              callback();
+            },
+            trigger: "blur",
+          },
         ],
         password: [
           { required: true, message: "必须输入密码", trigger: "blur" },
@@ -97,6 +114,18 @@ export default {
             max: 4,
             message: "长度必须是4位",
             trigger: "blur",
+          },
+        ],
+        isCheck: [
+          {
+            validator: (rule, value, callback) => {
+              if (!value) {
+                return callback(new Error("必须勾选用户协议"));
+              }
+
+              callback();
+            },
+            trigger: "change",
           },
         ],
       },
