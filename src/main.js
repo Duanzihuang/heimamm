@@ -7,6 +7,9 @@ Vue.config.productionTip = false
 // 导入less，webpack会让 main.js 这个入口文件和 .less 建立依赖关系
 // import '@/styles/base.less'
 
+// 导入 element.js
+import '@/plugins/element.js'
+
 import router from '@/router'
 
 new Vue({
