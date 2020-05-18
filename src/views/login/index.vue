@@ -57,23 +57,34 @@
           >
         </el-form-item>
         <el-form-item>
-          <el-button style="width:100%" type="primary">注册</el-button>
+          <el-button style="width:100%" @click="register" type="primary"
+            >注册</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
     <div class="right">
       <img src="@/assets/login_bg.png" alt="" />
     </div>
+    <!-- 注册子组件 -->
+    <!-- <register :isShow="isShow"></register> -->
+    <register ref="registerRef"></register>
   </div>
 </template>
 
 <script>
 // 按需导入
-import { setToken } from '@/utils/token'
+import { setToken } from "@/utils/token";
+// 导入子组件
+import register from "./register";
 export default {
   name: "Login",
+  components: {
+    register,
+  },
   data() {
     return {
+      // isShow: false,
       codeURL: process.env.VUE_APP_BASEURL + "/captcha?type=login",
       loginForm: {
         // 模型
@@ -91,7 +102,8 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (!value) {
-                return callback(new Error("手机号不能为空"));
+                callback(new Error("手机号不能为空"));
+                return;
               }
 
               // 手机号的正则表达式
@@ -139,22 +151,28 @@ export default {
     };
   },
   async created() {
-    // function promiseTest() {
-    //   const promise = new Promise((resolve, reject) => {
-    //     const r = Math.random();
-    //     console.log(r);
-    //     setTimeout(() => {
-    //       if (r > 0.5) {
-    //         resolve("成功之后的结果");
-    //       } else {
-    //         reject("失败");
-    //       }
-    //     }, 2000);
-    //   });
-    //   return promise
-    // }
-    // const res = await promiseTest()
-    // console.log(res)
+    function promiseTest() {
+      const promise = new Promise((resolve, reject) => {
+        const r = Math.random();
+        console.log(r);
+        setTimeout(() => {
+          if (r > 0.5) {
+            resolve("成功之后的结果");
+          } else {
+            reject("失败111");
+          }
+        }, 2000);
+      });
+      return promise;
+    }
+
+    try {
+      const res = await promiseTest();
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+
     // const res2 = await xxx(res)
     // const res3 = await yyy(res2)
     /**
@@ -169,7 +187,7 @@ export default {
       console.log(err)
     })
      */
-    /** 
+    /**
     promise
       .then((res) => {
         console.log(res);
@@ -220,10 +238,10 @@ export default {
           });
 
           // 保存token
-          setToken(res.data.data.token)
+          setToken(res.data.data.token);
 
           // 跳转到后台管理页面
-          this.$router.push('/layout')
+          this.$router.push("/layout");
         } else {
           this.$message.error(res.data.message);
 
@@ -233,6 +251,12 @@ export default {
             (new Date() - 0);
         }
       });
+    },
+    // 注册
+    register() {
+      // ???
+      // this.isShow = true
+      this.$refs.registerRef.dialogVisible = true
     },
   },
 };
