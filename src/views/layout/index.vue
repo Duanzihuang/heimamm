@@ -19,33 +19,36 @@
     <el-container>
       <el-aside width="auto">
         <el-menu
+          router
           default-active="3"
           class="el-menu-vertical-demo"
           :collapse="isCollapse"
         >
-          <el-menu-item index="1">
+          <el-menu-item index="/layout/chart">
             <i class="el-icon-pie-chart"></i>
             <span slot="title">数据预览</span>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="/layout/user">
             <i class="el-icon-user"></i>
             <span slot="title">用户列表</span>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="/layout/enterprise">
             <i class="el-icon-office-building"></i>
             <span slot="title">企业列表</span>
           </el-menu-item>
-          <el-menu-item index="4">
+          <el-menu-item index="/layout/question">
             <i class="el-icon-edit-outline"></i>
             <span slot="title">题库列表</span>
           </el-menu-item>
-          <el-menu-item index="5">
+          <el-menu-item index="/layout/subject">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main style="background-color:#e8e9ec;">内容部分</el-main>
+      <el-main style="background-color:#e8e9ec;">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -75,6 +78,10 @@ export default {
       if (res.data.code === 200) {
         this.avatar = process.env.VUE_APP_BASEURL + "/" + res.data.data.avatar;
         this.username = res.data.data.username;
+      } else if (res.data.code === 206){
+        // 删除token
+
+        // 跳转回登录页面
       }
     },
     // 退出
