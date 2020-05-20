@@ -1,30 +1,28 @@
 <template>
-  <div class="layout">
+  <el-container class="layout">
+    <el-header class="header">
+      <div class="left">
+        <i style="font-size: 20px;" class="el-icon-s-fold"></i>
+        <img src="@/assets/layout_icon.png" class="marginlr" alt="" />
+        <span class="title">黑马面面</span>
+      </div>
+      <div class="right">
+        <img :src="avatar" alt="" />
+        <span class="name">{{ username }} 欢迎您</span>
+        <el-button @click="logout" type="primary">退出</el-button>
+      </div>
+    </el-header>
     <el-container>
-      <el-header class="header">
-        <div class="left">
-          <i style="font-size: 20px;" class="el-icon-s-fold"></i>
-          <img src="@/assets/layout_icon.png" class="marginlr" alt="" />
-          <span class="title">黑马面面</span>
-        </div>
-        <div class="right">
-          <img :src="avatar" alt="" />
-          <span class="name">{{ username }} 欢迎您</span>
-          <el-button type="primary">退出</el-button>
-        </div>
-      </el-header>
-      <el-container>
-        <el-aside width="200px">
-          左边菜单
-        </el-aside>
-        <el-main>内容部分</el-main>
-      </el-container>
+      <el-aside width="200px">
+        左边菜单
+      </el-aside>
+      <el-main>内容部分</el-main>
     </el-container>
-  </div>
+  </el-container>
 </template>
 
 <script>
-import { getToken } from "@/utils/token";
+import { removeToken } from "@/utils/token";
 export default {
   data() {
     return {
@@ -36,11 +34,12 @@ export default {
     this.getUserInfoData();
   },
   methods: {
+    // 获取用户信息
     async getUserInfoData() {
       const res = await this.$axios.get("/info", {
-        headers: {
-          token: getToken(),
-        },
+        // headers: {
+        //   token: getToken(),
+        // },
       });
 
       if (res.data.code === 200) {
@@ -48,12 +47,33 @@ export default {
         this.username = res.data.data.username;
       }
     },
+    // 退出
+    logout() {
+      this.$confirm("确定退出吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const res = await this.$axios.get("/logout");
+
+          if (res.data.code === 200) {
+            // 1、删除token
+            removeToken();
+
+            // 2、跳转到首页
+            this.$router.push("/login");
+          }
+        })
+        .catch(() => {});
+    },
   },
 };
 </script>
 
 <style lang="less">
 .layout {
+  height: 100%;
   .header {
     display: flex;
     align-items: center;
@@ -84,6 +104,19 @@ export default {
         margin-right: 38px;
       }
     }
+  }
+  .el-aside {
+    background-color: #d3dce6;
+    color: #333;
+    text-align: center;
+    line-height: 200px;
+  }
+
+  .el-main {
+    background-color: #e9eef3;
+    color: #333;
+    text-align: center;
+    line-height: 160px;
   }
 }
 </style>
