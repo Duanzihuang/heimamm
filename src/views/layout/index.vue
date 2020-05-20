@@ -2,7 +2,11 @@
   <el-container class="layout">
     <el-header class="header">
       <div class="left">
-        <i style="font-size: 20px;" class="el-icon-s-fold"></i>
+        <i
+          @click="isCollapse = !isCollapse"
+          style="font-size: 20px;"
+          class="el-icon-s-fold"
+        ></i>
         <img src="@/assets/layout_icon.png" class="marginlr" alt="" />
         <span class="title">黑马面面</span>
       </div>
@@ -13,10 +17,35 @@
       </div>
     </el-header>
     <el-container>
-      <el-aside width="200px">
-        左边菜单
+      <el-aside width="auto">
+        <el-menu
+          default-active="3"
+          class="el-menu-vertical-demo"
+          :collapse="isCollapse"
+        >
+          <el-menu-item index="1">
+            <i class="el-icon-pie-chart"></i>
+            <span slot="title">数据预览</span>
+          </el-menu-item>
+          <el-menu-item index="2">
+            <i class="el-icon-user"></i>
+            <span slot="title">用户列表</span>
+          </el-menu-item>
+          <el-menu-item index="3">
+            <i class="el-icon-office-building"></i>
+            <span slot="title">企业列表</span>
+          </el-menu-item>
+          <el-menu-item index="4">
+            <i class="el-icon-edit-outline"></i>
+            <span slot="title">题库列表</span>
+          </el-menu-item>
+          <el-menu-item index="5">
+            <i class="el-icon-notebook-2"></i>
+            <span slot="title">学科列表</span>
+          </el-menu-item>
+        </el-menu>
       </el-aside>
-      <el-main>内容部分</el-main>
+      <el-main style="background-color:#e8e9ec;">内容部分</el-main>
     </el-container>
   </el-container>
 </template>
@@ -28,6 +57,7 @@ export default {
     return {
       avatar: "", // 用户的头像
       username: "", // 昵称
+      isCollapse: false, // 是否收起折叠菜单
     };
   },
   created() {
@@ -105,18 +135,17 @@ export default {
       }
     }
   }
-  .el-aside {
-    background-color: #d3dce6;
-    color: #333;
-    text-align: center;
-    line-height: 200px;
+  .el-menu {
+    border-right: solid 0px #e6e6e6;
+    list-style: none;
+    position: relative;
+    margin: 0;
+    padding-left: 0;
+    background-color: #fff;
   }
-
-  .el-main {
-    background-color: #e9eef3;
-    color: #333;
-    text-align: center;
-    line-height: 160px;
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
   }
 }
 </style>
