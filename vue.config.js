@@ -1,5 +1,5 @@
 // vue.config.js
 module.exports = {
   // 选项...
-  lintOnSave: false,
+  lintOnSave: false, // 关闭掉eslint的检查
 };

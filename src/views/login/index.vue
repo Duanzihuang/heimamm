@@ -151,27 +151,27 @@ export default {
     };
   },
   async created() {
-    function promiseTest() {
-      const promise = new Promise((resolve, reject) => {
-        const r = Math.random();
-        console.log(r);
-        setTimeout(() => {
-          if (r > 0.5) {
-            resolve("成功之后的结果");
-          } else {
-            reject("失败111");
-          }
-        }, 2000);
-      });
-      return promise;
-    }
+    // function promiseTest() {
+    //   const promise = new Promise((resolve, reject) => {
+    //     const r = Math.random();
+    //     console.log(r);
+    //     setTimeout(() => {
+    //       if (r > 0.5) {
+    //         resolve("成功之后的结果");
+    //       } else {
+    //         reject("失败111");
+    //       }
+    //     }, 2000);
+    //   });
+    //   return promise;
+    // }
 
-    try {
-      const res = await promiseTest();
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const res = await promiseTest();
+    //   console.log(res);
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
     // const res2 = await xxx(res)
     // const res3 = await yyy(res2)
