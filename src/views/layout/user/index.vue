@@ -8,16 +8,16 @@
         ref="searchFormRef"
         label-width="80px"
       >
-        <el-form-item label="用户名称">
+        <el-form-item label="用户名称" prop="username">
           <el-input
             style="width:150px;"
             v-model="searchForm.username"
           ></el-input>
         </el-form-item>
-        <el-form-item label="用户邮箱">
+        <el-form-item label="用户邮箱" prop="email">
           <el-input style="width:150px;" v-model="searchForm.email"></el-input>
         </el-form-item>
-        <el-form-item label="角色">
+        <el-form-item label="角色" prop="role_id">
           <el-select
             style="width:150px;"
             v-model="searchForm.role_id"
@@ -30,8 +30,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
-          <el-button type="default">清除</el-button>
+          <el-button @click="search" type="primary">搜索</el-button>
+          <el-button @click="clear" type="default">清除</el-button>
           <el-button type="primary">+新增用户</el-button>
         </el-form-item>
       </el-form>
@@ -64,6 +64,18 @@
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin-top:15px;text-align:center;">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="page"
+          :page-sizes="[2, 5, 10, 20]"
+          :page-size="limit"
+          layout="total, sizes, prev, pager, next,jumper"
+          :total="total"
+        >
+        </el-pagination>
+      </div>
     </el-card>
   </div>
 </template>
@@ -106,6 +118,32 @@ export default {
 
         this.total = res.data.data.pagination.total;
       }
+    },
+    // 搜索
+    search() {
+      this.page = 1; // 从第一页开始搜索
+
+      this.getUserListData();
+    },
+    // 清除
+    clear() {
+      // this.searchForm.username = ''
+      // this.searchForm.email = ''
+      // this.searchForm.role_id = ''
+      // 重置表单项的内容
+      this.$refs.searchFormRef.resetFields();
+
+      this.search();
+    },
+    handleSizeChange(val) {
+      this.limit = val;
+
+      this.search();
+    },
+    handleCurrentChange(val) {
+      this.page = val;
+
+      this.getUserListData();
     },
   },
 };
