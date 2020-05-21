@@ -32,7 +32,7 @@
         <el-form-item>
           <el-button @click="search" type="primary">搜索</el-button>
           <el-button @click="clear" type="default">清除</el-button>
-          <el-button type="primary">+新增用户</el-button>
+          <el-button @click="add" type="primary">+新增用户</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -57,10 +57,16 @@
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
             <el-button type="primary">编辑</el-button>
-            <el-button :type="scope.row.status === 0 ? 'success' : 'info'">{{
-              scope.row.status === 0 ? "启用" : "禁用"
-            }}</el-button>
-            <el-button type="default">删除</el-button>
+            <el-button
+              @click="changeStatus(scope.row.id)"
+              :type="scope.row.status === 0 ? 'success' : 'info'"
+              >{{ scope.row.status === 0 ? "启用" : "禁用" }}</el-button
+            >
+            <el-button
+              @click="deleteUser(scope.row.id, scope.row.username)"
+              type="default"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -77,11 +83,17 @@
         </el-pagination>
       </div>
     </el-card>
+    <user-edit ref="userEditRef"></user-edit>
   </div>
 </template>
 
 <script>
+// 导入子组件
+import UserEdit from './user-add-or-update'
 export default {
+  components: {
+    UserEdit
+  },
   name: "UserList",
   data() {
     return {
@@ -135,16 +147,57 @@ export default {
 
       this.search();
     },
+    // 分页条的页容量发生了改变
     handleSizeChange(val) {
       this.limit = val;
 
       this.search();
     },
+    // 分页条的当前页发生了改变
     handleCurrentChange(val) {
       this.page = val;
 
       this.getUserListData();
     },
+    // 更改当前行的状态
+    async changeStatus(id) {
+      const res = await this.$axios.post("/user/status", { id });
+
+      if (res.data.code === 200) {
+        this.$message({
+          message: "更改状态成功~",
+          type: "success",
+        });
+
+        // 重新查询
+        this.search();
+      }
+    },
+    deleteUser(id, username) {
+      this.$confirm(`确定删除 ${username} 该用户吗？`, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const res = await this.$axios.post("/user/remove", { id });
+          if (res.data.code === 200) {
+            this.$message({
+              message: "删除成功~",
+              type: "success",
+            });
+
+            // 重新查询
+            this.search();
+          }
+        })
+        .catch(() => {});
+    },
+    add() {
+      // 让新增用户的对话框显示出来
+      this.$refs.userEditRef.dialogVisible = true
+      this.$refs.userEditRef.mode = 'add'
+    }
   },
 };
 </script>
