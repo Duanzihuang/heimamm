@@ -20,7 +20,7 @@
       <el-aside width="auto">
         <el-menu
           router
-          default-active="3"
+          :default-active="defaultActive"
           class="el-menu-vertical-demo"
           :collapse="isCollapse"
         >
@@ -61,9 +61,11 @@ export default {
       avatar: "", // 用户的头像
       username: "", // 昵称
       isCollapse: false, // 是否收起折叠菜单
+      defaultActive: '' // 菜单选中的值
     };
   },
   created() {
+    this.defaultActive = this.$route.fullPath
     this.getUserInfoData();
   },
   methods: {
