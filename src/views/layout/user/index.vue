@@ -43,7 +43,11 @@
         <el-table-column type="index" label="序号" width="80"></el-table-column>
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="phone" label="电话"></el-table-column>
-        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column
+          prop="email"
+          label="邮箱"
+          width="200"
+        ></el-table-column>
         <el-table-column prop="role" label="角色"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
         <el-table-column label="状态">
@@ -89,10 +93,10 @@
 
 <script>
 // 导入子组件
-import UserEdit from './user-add-or-update'
+import UserEdit from "./user-add-or-update";
 export default {
   components: {
-    UserEdit
+    UserEdit,
   },
   name: "UserList",
   data() {
@@ -195,9 +199,9 @@ export default {
     },
     add() {
       // 让新增用户的对话框显示出来
-      this.$refs.userEditRef.dialogVisible = true
-      this.$refs.userEditRef.mode = 'add'
-    }
+      this.$refs.userEditRef.dialogVisible = true;
+      this.$refs.userEditRef.mode = "add";
+    },
   },
 };
 </script>
