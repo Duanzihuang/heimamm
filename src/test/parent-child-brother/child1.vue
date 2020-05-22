@@ -9,10 +9,13 @@
     </ul>
     <br /><br />
     <button @click="sendValueToParent">传值给父组件</button>
+    <br /><br />
+     <button @click="sendValueToChild2">传值给Child2</button>
   </div>
 </template>
 
 <script>
+import bus from './bus'
 export default {
   name: "Child1",
   // props: ['list']
@@ -37,7 +40,12 @@ export default {
            * 参数1：自定义事件的名字，可以随意写，但是不要写系统已经存在的时间，比如 click
            * 参数2：就是你要传递给父组件的值（任意类型）
            */
-          this.$emit('sendFood',{name:'烧鸭饭',price:15})
+        //   this.$emit('sendfood',{name:'烧鸭饭',price:15})
+
+        this.$parent.getFoodValue({name:'鸡腿饭',price:20})
+      },
+      sendValueToChild2() {
+        bus.$emit('senddrinks',{name:'草莓啵啵', price:35})
       }
   }
 };

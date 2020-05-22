@@ -60,7 +60,7 @@
         </el-table-column>
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
-            <el-button type="primary">编辑</el-button>
+            <el-button @click="editUser(scope.row)" type="primary">编辑</el-button>
             <el-button
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
@@ -87,7 +87,7 @@
         </el-pagination>
       </div>
     </el-card>
-    <user-edit ref="userEditRef"></user-edit>
+    <user-edit ref="userEditRef" @editok="search" :mode="mode"></user-edit>
   </div>
 </template>
 
@@ -110,6 +110,7 @@ export default {
       limit: 2, // 查询时候的页容量(每页查询多少条)
       userList: [], // 展示用户列表所需要的数据
       total: 0, // 总条数，分页时候用得着
+      mode: 'add'
     };
   },
   created() {
@@ -201,8 +202,13 @@ export default {
     add() {
       // 让新增用户的对话框显示出来
       this.$refs.userEditRef.dialogVisible = true;
-      this.$refs.userEditRef.mode = "add";
+      // this.$refs.userEditRef.mode = "add";
     },
+    // 修改用户
+    editUser() {
+      this.mode = 'edit'
+      this.$refs.userEditRef.dialogVisible = true;
+    }
   },
 };
 </script>

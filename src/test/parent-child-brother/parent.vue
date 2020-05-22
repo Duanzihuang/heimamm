@@ -4,8 +4,8 @@
         中午我们吃 {{foodName}}, 价格是 {{foodPrice}}
         <br/><br/>
         <div style="margin-left:20px;float:left;width:400px;height:500px;border:1px solid green;">
-            <child1 :list="dashenList" @sendFood="getFoodValue"></child1>
-            <!-- <child1></child1> -->
+            <!-- <child1 :list="dashenList" @sendfood="getFoodValue"></child1> -->
+            <child1 :list="dashenList"></child1>
         </div>
         <div style="margin-right:20px;float:right;width:400px;height:500px;border:1px solid blue;">
             <child2></child2>  

@@ -43,10 +43,16 @@
 <script>
 export default {
   name: "UserEdit",
+  props: {
+    mode: {
+      type: String,
+      default: 'add'
+    }
+  },
   data() {
     return {
       dialogVisible: false,
-      mode: "", // 模式，add 代表新增  edit 代表修改
+      // mode: "", // 模式，add 代表新增  edit 代表修改
       userForm: {
         username: "", // 用户名
         email: "", // 邮箱
@@ -133,7 +139,8 @@ export default {
           // 刷新父组件中的数据
           // 第一种 this.$emit()
           // 第二种 this.$parent.search()
-          this.$parent.search()
+          // this.$parent.search()
+          this.$emit('editok')
         } else {
           this.$message.error(res.data.message)
         }
