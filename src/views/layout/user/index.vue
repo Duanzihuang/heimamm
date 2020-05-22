@@ -147,6 +147,7 @@ export default {
       // this.searchForm.email = ''
       // this.searchForm.role_id = ''
       // 重置表单项的内容
+      // 前提：我们form表单的 el-form-item 上面必须设置prop
       this.$refs.searchFormRef.resetFields();
 
       this.search();
