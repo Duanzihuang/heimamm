@@ -16,16 +16,16 @@
         </el-form-item>
         <el-form-item label="角色" prop="role_id">
           <el-select v-model="userForm.role_id" placeholder="请选择">
-            <el-option label="超级管理员" value="1"> </el-option>
-            <el-option label="管理员" value="2"> </el-option>
-            <el-option label="老师" value="3"> </el-option>
-            <el-option label="学生" value="4"> </el-option>
+            <el-option label="超级管理员" :value="1"> </el-option>
+            <el-option label="管理员" :value="2"> </el-option>
+            <el-option label="老师" :value="3"> </el-option>
+            <el-option label="学生" :value="4"> </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="userForm.status" placeholder="请选择状态">
-            <el-option label="启用" value="1"> </el-option>
-            <el-option label="禁用" value="0"> </el-option>
+            <el-option label="启用" :value="1"> </el-option>
+            <el-option label="禁用" :value="0"> </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="用户备注" prop="remark">
@@ -124,6 +124,7 @@ export default {
           res = await this.$axios.post('/user/add', this.userForm)
         } else {
           // 修改
+          res = await this.$axios.post('/user/edit',this.userForm)
         }
 
         if (res.data.code === 200) {
