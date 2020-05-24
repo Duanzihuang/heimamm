@@ -45,7 +45,8 @@
         <el-table-column prop="eid" label="企业编号"> </el-table-column>
         <el-table-column prop="name" label="企业名称"> </el-table-column>
         <el-table-column prop="username" label="创建者"> </el-table-column>
-        <el-table-column prop="create_time" label="创建日期" width="200"> </el-table-column>
+        <el-table-column prop="create_time" label="创建日期" width="200">
+        </el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
             <span
@@ -55,33 +56,45 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="280">
-            <template slot-scope="scope">
-                <el-button type="primary">编辑</el-button>
-                <el-button :type="scope.row.status === 0 ? 'success' : 'info'">
-                    {{scope.row.status === 0 ? '启用' : '禁用'}}
-                </el-button>
-                <el-button>删除</el-button>
-            </template>
+          <template slot-scope="scope">
+            <el-button type="primary">编辑</el-button>
+            <el-button
+              @click="changeStatus(scope.row.id)"
+              :type="scope.row.status === 0 ? 'success' : 'info'"
+            >
+              {{ scope.row.status === 0 ? "启用" : "禁用" }}
+            </el-button>
+            <el-button @click="del(scope.row.id)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
       <div style="margin-top:15px;text-align:center;">
-          <el-pagination
-              @size-change="sizeChange"
-              @current-change="currentChange"
-              :current-page="page"
-              :page-sizes="[2, 5, 10, 20]"
-              :page-size="limit"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="total" background>
-          </el-pagination>
+        <el-pagination
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="page"
+          :page-sizes="[2, 5, 10, 20]"
+          :page-size="limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          background
+        >
+        </el-pagination>
       </div>
     </el-card>
+    <enterprise-edit ref="enterpriseEditRef"></enterprise-edit>
   </div>
 </template>
 
 <script>
+// 导入子组件
+import EnterpriseEdit from "./enterprise-add-or-update";
 export default {
   name: "EnterPrise",
+  components: {
+    // 局部注册
+    EnterpriseEdit,
+  },
   data() {
     return {
       searchForm: {
@@ -129,17 +142,55 @@ export default {
     },
     // 页容量发生改变
     sizeChange(val) {
-        this.limit = val
+      this.limit = val;
 
-        this.search()
+      this.search();
     },
     // 当前页码发生了改变
     currentChange(val) {
-        this.page = val
+      this.page = val;
 
-        this.getEnterpriseListData()
+      this.getEnterpriseListData();
     },
-    add() {},
+    async changeStatus(id) {
+      const res = await this.$axios.post("/enterprise/status", { id });
+      if (res.data.code === 200) {
+        // 提示
+        this.$message({
+          type: "success",
+          message: "更改状态成功~",
+        });
+
+        // 调用search方法刷新
+        this.search();
+      }
+    },
+    del(id) {
+      this.$confirm("确定删除该数据吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          const res = await this.$axios.post("/enterprise/remove", { id });
+
+          if (res.data.code === 200) {
+            // 提示
+            this.$message({
+              type: "success",
+              message: "删除成功~",
+            });
+
+            // 调用search方法刷新
+            this.search();
+          }
+        })
+        .catch(() => {});
+    },
+    add() {
+      this.$refs.enterpriseEditRef.dialogVisible = true;
+      this.$refs.enterpriseEditRef.mode = "add";
+    },
   },
 };
 </script>

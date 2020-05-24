@@ -123,6 +123,8 @@ export default {
         if (this.mode === 'add') {
           res = await this.$axios.post('/user/add', this.userForm)
         } else {
+          // delete this.userForm.create_time
+          // delete this.userForm.update_time
           // 修改
           res = await this.$axios.post('/user/edit',this.userForm)
         }

@@ -15,6 +15,11 @@ import '@/utils/request.js'
 
 import router from '@/router'
 
+// import UserEdit from '@/views/layout/user/user-add-or-update'
+// 全局注册
+// Vue.component('user-edit',UserEdit)
+// Vue.component('el-button',Button)
+
 new Vue({
   render: h => h(App),
   router
