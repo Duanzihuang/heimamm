@@ -57,7 +57,9 @@
         </el-table-column>
         <el-table-column label="操作" width="280">
           <template slot-scope="scope">
-            <el-button type="primary">编辑</el-button>
+            <el-button @click="editEnterprise(scope.row)" type="primary"
+              >编辑</el-button
+            >
             <el-button
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
@@ -82,7 +84,7 @@
         </el-pagination>
       </div>
     </el-card>
-    <enterprise-edit ref="enterpriseEditRef"></enterprise-edit>
+    <enterprise-edit ref="enterpriseEditRef" @search="search"></enterprise-edit>
   </div>
 </template>
 
@@ -162,7 +164,7 @@ export default {
         });
 
         // 调用search方法刷新
-        this.search();
+        this.getEnterpriseListData();
       }
     },
     del(id) {
@@ -187,9 +189,24 @@ export default {
         })
         .catch(() => {});
     },
+    // 新增企业
     add() {
-      this.$refs.enterpriseEditRef.dialogVisible = true;
       this.$refs.enterpriseEditRef.mode = "add";
+      this.$refs.enterpriseEditRef.dialogVisible = true;
+    },
+    // 修改企业
+    editEnterprise(row) {
+      const { id, eid, intro, name, short_name, remark } = row;
+      this.$refs.enterpriseEditRef.enterpriseForm = {
+        id,
+        eid,
+        name,
+        short_name,
+        intro,
+        remark,
+      };
+      this.$refs.enterpriseEditRef.mode = "edit";
+      this.$refs.enterpriseEditRef.dialogVisible = true;
     },
   },
 };
