@@ -66,37 +66,50 @@ export default {
       },
     };
   },
+  watch: {
+    dialogVisible(newValue) {
+      // if (newValue) {
+      //   this.$nextTick(() => {
+      //     this.$refs.enterpriseFormRef.clearValidate();
+      //   });
+      // }
+      if (!newValue) {
+        this.$refs.enterpriseFormRef.clearValidate();
+      }
+    },
+  },
   methods: {
     // 新增 & 修改最终点击确定调用的方法
     submit() {
-      this.$refs.enterpriseFormRef.validate(async valid => {
-        if (!valid) return
+      this.$refs.enterpriseFormRef.validate(async (valid) => {
+        if (!valid) return;
 
-        let res = null
-        if (this.mode === 'add') {
-          res = await this.$axios.post('/enterprise/add',this.enterpriseForm)
-        } else { // 修改
-          res = await this.$axios.post('/enterprise/edit',this.enterpriseForm)
+        let res = null;
+        if (this.mode === "add") {
+          res = await this.$axios.post("/enterprise/add", this.enterpriseForm);
+        } else {
+          // 修改
+          res = await this.$axios.post("/enterprise/edit", this.enterpriseForm);
         }
 
         if (res.data.code === 200) {
           // 提示
           this.$message({
-            type: 'success',
-            message: this.mode === 'add' ? '新增成功~' : '修改成功~'
-          })
+            type: "success",
+            message: this.mode === "add" ? "新增成功~" : "修改成功~",
+          });
 
           // 关闭当前窗口
-          this.dialogVisible = false
+          this.dialogVisible = false;
 
           // 调用父组件的search方法
           // 方式1，通过 $emit
-          this.$emit('search')
+          this.$emit("search");
 
           // 方式2，通过 $parent
           // this.$parent.search()
         }
-      })
+      });
     },
   },
 };

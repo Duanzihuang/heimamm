@@ -192,7 +192,19 @@ export default {
     // 新增企业
     add() {
       this.$refs.enterpriseEditRef.mode = "add";
+      this.$refs.enterpriseEditRef.enterpriseForm = {
+        eid: "", // 企业编号
+        name: "", // 企业名称
+        short_name: "", // 简称
+        intro: "", // 企业简介
+        remark: "", // 备注
+      }
       this.$refs.enterpriseEditRef.dialogVisible = true;
+
+      // this.$nextTick(() => {
+      //   // this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.resetFields()
+      //   this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.clearValidate()
+      // })
     },
     // 修改企业
     editEnterprise(row) {
@@ -207,6 +219,10 @@ export default {
       };
       this.$refs.enterpriseEditRef.mode = "edit";
       this.$refs.enterpriseEditRef.dialogVisible = true;
+
+      // this.$nextTick(() => {
+      //   this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.clearValidate()
+      // })
     },
   },
 };
