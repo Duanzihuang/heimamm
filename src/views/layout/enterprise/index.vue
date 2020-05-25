@@ -163,7 +163,7 @@ export default {
           message: "更改状态成功~",
         });
 
-        // 调用search方法刷新
+        // 重新调用获取方法刷新
         this.getEnterpriseListData();
       }
     },
