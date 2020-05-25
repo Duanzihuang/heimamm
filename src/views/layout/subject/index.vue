@@ -33,7 +33,7 @@
         <el-form-item>
           <el-button @click="search" type="primary">搜索</el-button>
           <el-button @click="clear">清除</el-button>
-          <el-button type="primary">+新增学科</el-button>
+          <el-button @click="add" type="primary">+新增学科</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -85,12 +85,17 @@
         </el-pagination>
       </div>
     </el-card>
+    <subject-edit ref="subjectEditRef"></subject-edit>
   </div>
 </template>
 
 <script>
+import SubjectEdit from './subject-add-or-update'
 export default {
   name: "Subject",
+  components: { // 局部注册
+    "subject-edit": SubjectEdit
+  },
   data() {
     return {
       searchForm: {
@@ -184,6 +189,11 @@ export default {
           }
         })
         .catch(() => {});
+    },
+    // 新增学科
+    add() {
+      this.$refs.subjectEditRef.mode = 'add'
+      this.$refs.subjectEditRef.dialogVisible = true
     },
     // 编辑学科
     editSubject(row) {
