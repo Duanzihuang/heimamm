@@ -90,11 +90,12 @@
 </template>
 
 <script>
-import SubjectEdit from './subject-add-or-update'
+import SubjectEdit from "./subject-add-or-update";
 export default {
   name: "Subject",
-  components: { // 局部注册
-    "subject-edit": SubjectEdit
+  components: {
+    // 局部注册
+    "subject-edit": SubjectEdit,
   },
   data() {
     return {
@@ -184,7 +185,7 @@ export default {
               message: "删除成功~",
             });
 
-            // 刷洗表格
+            // 刷新表格
             this.search();
           }
         })
@@ -192,12 +193,30 @@ export default {
     },
     // 新增学科
     add() {
-      this.$refs.subjectEditRef.mode = 'add'
-      this.$refs.subjectEditRef.dialogVisible = true
+      this.$refs.subjectEditRef.mode = "add";
+      this.$refs.subjectEditRef.dialogVisible = true;
+      this.$refs.subjectEditRef.subjectForm = {
+        rid: "", // 学科编号
+        name: "", // 学科名称
+        short_name: "", // 学科简称
+        intro: "", // 学科简介
+        remark: "", // 备注
+      };
     },
     // 编辑学科
     editSubject(row) {
-      console.log(row);
+      this.$refs.subjectEditRef.mode = "edit";
+      // this.$refs.subjectEditRef.subjectForm = JSON.parse(JSON.stringify(row))
+      const { id, rid, name, short_name, intro, remark } = row;
+      this.$refs.subjectEditRef.subjectForm = {
+        id, // 学科id
+        rid, // 学科编号
+        name, // 学科名称
+        short_name, // 学科简称
+        intro, // 学科简介
+        remark, // 备注
+      };
+      this.$refs.subjectEditRef.dialogVisible = true;
     },
   },
 };
