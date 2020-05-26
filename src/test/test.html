@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="changeName()">更改name的值</button>
+    <button onclick="changeName2()">再次更改name的值</button>
+    <div id="test"></div>
+    <script>
+        /**
+        let person = {
+            name: ''
+        }
+
+        person.name = '张三'
+        console.log(person.name)
+        */
+
+        let person = {}
+
+        let temp = null
+        Object.defineProperty(person, 'name', {
+            get: function () {
+                return temp
+            },
+            set: function (val) {
+                // console.log('set---',val)
+                document.getElementById("test").innerHTML = val
+                temp = val
+            }
+        })
+
+        function changeName() {
+            person.name = '李四'
+        }
+
+        function changeName2() {
+            person.name = '王五'
+        }
+    </script>
+</body>
+</html>

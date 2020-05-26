@@ -2,7 +2,7 @@
   <div class="question">
     <!-- 搜索内容区域 -->
     <el-card>
-      <el-form inline :model="searchForm" ref="form" label-width="50px">
+      <el-form inline :model="searchForm" ref="searchFormRef" label-width="50px">
         <el-row>
           <el-col :span="6">
             <el-form-item class="selectWidth" label="学科" prop="subject">
@@ -113,8 +113,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item>
-              <el-button type="primary">搜索</el-button>
-              <el-button>清除</el-button>
+              <el-button @click="search" type="primary">搜索</el-button>
+              <el-button @click="clear">清除</el-button>
               <el-button type="primary">+新增试题</el-button>
             </el-form-item>
           </el-col>
@@ -149,15 +149,37 @@ export default {
         create_date: "", // 创建日期
         title: "", // 标题
       },
+      page: 1, // 页码
+      limit: 2, // 页容量（每页加载多少条）
+      questionList: [], // 题库列表
+      total: 0, // 总条数
     };
   },
   created() {
+    // 获取题库列表数据
+    this.getQuestionListData()
     // 获取所有的学科
     this.getSubjectListData();
     // 获取所有的企业
     this.getEnterpriseListData();
   },
   methods: {
+    // 分页获取题库列表
+    async getQuestionListData() {
+      const res = await this.$axios.get('/question/list',{
+        params: {
+          page: this.page,
+          limit: this.limit,
+          ...this.searchForm
+        }
+      })
+
+      if (res.data.code === 200) {
+        this.questionList = res.data.data.items;
+        this.total = res.data.data.pagination.total
+      }
+    },
+    // 查询所有的学科列表
     async getSubjectListData() {
       const res = await this.$axios.get("/subject/list");
 
@@ -165,6 +187,7 @@ export default {
         this.subjectList = res.data.data.items;
       }
     },
+    // 获取所有的企业列表
     async getEnterpriseListData() {
       const res = await this.$axios.get("/enterprise/list");
 
@@ -172,6 +195,19 @@ export default {
         this.enterpriseList = res.data.data.items;
       }
     },
+    // 搜索
+    search() {
+      this.page = 1
+
+      this.getQuestionListData()
+    },
+    // 清除
+    clear() {
+      // 如果要调用 form 表单的 resetFields 这个方法，需要给 el-form-item 设置 prop
+      this.$refs.searchFormRef.resetFields()
+
+      this.search()
+    }
   },
 };
 </script>
