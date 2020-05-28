@@ -130,10 +130,11 @@ export default {
   },
   created() {
     // 获取用户列表数据，用于内容展示
-    this.getUserListData();
+    // this.getUserListData();
+    this.getListData()
   },
   methods: {
-    async getUserListData() {
+    async getListData() {
       const res = await this.$axios.get("/user/list", {
         params: {
           page: this.page,
@@ -155,7 +156,7 @@ export default {
     search() {
       this.page = 1; // 从第一页开始搜索
 
-      this.getUserListData();
+      this.getListData();
     },
     // 清除
     clear() {
@@ -178,7 +179,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
 
-      this.getUserListData();
+      this.getListData();
     },
     // 更改当前行的状态
     // async changeStatus(id) {

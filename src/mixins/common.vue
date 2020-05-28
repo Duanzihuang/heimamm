@@ -12,8 +12,8 @@ export default {
         });
 
         // 调用search，重新查询
-        // this.getListData()
-        this.search();
+        this.getListData()
+        // this.search();
       }
     },
     // 删除的公共方法

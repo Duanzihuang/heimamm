@@ -86,6 +86,19 @@
             >
           </el-radio-group>
         </el-form-item>
+        <hr class="hrMargin"/> 
+        <el-form-item label="试题标题" class="setMargin" prop="title">
+          <quill-editor :options="{placeholder:'请输入标题...'}" v-model="questionForm.title"></quill-editor>
+        </el-form-item>
+        <hr class="hrMargin">
+        <el-form-item label="解析视频"></el-form-item>
+        <el-form-item label="答案解析" class="setMargin" prop="answer_analyze">
+          <quill-editor :options="{placeholder: '请输入答案解析...'}" v-model="questionForm.answer_analyze"></quill-editor>
+        </el-form-item>
+        <hr class="hrMargin" />
+        <el-form-item label="试题备注" prop="remark">
+          <el-input v-model="questionForm.remark"></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button>取消</el-button>
           <el-button type="primary" @click="submit">确定</el-button>
@@ -97,11 +110,15 @@
 
 <script>
 import { regionData } from "element-china-area-data";
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 export default {
   name: "QuestionEdit",
   //   props: ['subjectList','enterpriseList'],
-  created() {
-    console.log(regionData);
+  components: {
+    quillEditor
   },
   props: {
     subjectList: Array,
@@ -123,6 +140,9 @@ export default {
         city: [], // 城市
         type: "1", // 题型
         difficulty: "1", // 难度
+        title: '', // 标题
+        answer_analyze: '', // 答案解析
+        remark: '' // 答案备注
       },
       rules: {
         subject: [{ required: true, message: "请选择学科", trigger: "change" }],
@@ -135,6 +155,15 @@ export default {
         difficulty: [
           { required: true, message: "请选择难度", trigger: "change" },
         ],
+        title: [
+          { required: true, message: "标题不能为空", trigger: "change" }
+        ],
+        answer_analyze: [
+          { required: true, message: "答案解析不能为空", trigger: "change" }
+        ],
+        remark: [
+          { required: true, message: "答案备注不能为空", trigger: "blur" }
+        ]
       },
     };
   },
@@ -166,6 +195,18 @@ export default {
   }
   .selectWidth {
     width: 300px;
+  }
+  .hrMargin {
+    margin-bottom: 20px;
+  }
+  .setMargin {
+    .el-form-item__content {
+      margin-left: 0px !important;
+      margin-top: 40px;
+    }
+  }
+  .ql-editor {
+    height: 100px;
   }
 }
 </style>

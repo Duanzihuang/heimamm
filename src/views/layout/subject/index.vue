@@ -126,10 +126,11 @@ export default {
     };
   },
   created() {
-    this.getSubjectListData();
+    // this.getSubjectListData();
+    this.getListData()
   },
   methods: {
-    async getSubjectListData() {
+    async getListData() {
       const res = await this.$axios.get("/subject/list", {
         params: {
           page: this.page,
@@ -147,7 +148,7 @@ export default {
     search() {
       this.page = 1;
 
-      this.getSubjectListData();
+      this.getListData();
     },
     // 清除
     clear() {
@@ -165,7 +166,7 @@ export default {
     currentChange(val) {
       this.page = val;
 
-      this.getSubjectListData();
+      this.getListData();
     },
     // 更改状态
     // async changeStatus(id) {
