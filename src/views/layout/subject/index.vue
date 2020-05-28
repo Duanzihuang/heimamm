@@ -60,13 +60,24 @@
             <el-button type="primary" @click="editSubject(scope.row)"
               >编辑</el-button
             >
-            <el-button
+            <!-- <el-button
               :type="scope.row.status === 0 ? 'success' : 'info'"
               @click="changeStatus(scope.row.id)"
             >
               {{ scope.row.status === 0 ? "启用" : "禁用" }}
+            </el-button> -->
+            <el-button
+              :type="scope.row.status === 0 ? 'success' : 'info'"
+              @click="changeStatus('/subject/status', scope.row.id)"
+            >
+              {{ scope.row.status === 0 ? "启用" : "禁用" }}
             </el-button>
-            <el-button type="danger" @click="del(scope.row.id)">删除</el-button>
+            <!-- <el-button type="danger" @click="del(scope.row.id)">删除</el-button> -->
+            <el-button
+              type="danger"
+              @click="del('/subject/remove', scope.row.id)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -91,7 +102,10 @@
 
 <script>
 import SubjectEdit from "./subject-add-or-update";
+// 导入混入对象
+import common from "@/mixins/common";
 export default {
+  mixins: [common],
   name: "Subject",
   components: {
     // 局部注册
@@ -154,43 +168,43 @@ export default {
       this.getSubjectListData();
     },
     // 更改状态
-    async changeStatus(id) {
-      const res = await this.$axios.post("/subject/status", { id });
+    // async changeStatus(id) {
+    //   const res = await this.$axios.post("/subject/status", { id });
 
-      if (res.data.code === 200) {
-        // 提示
-        this.$message({
-          type: "success",
-          message: "更新状态成功~",
-        });
+    //   if (res.data.code === 200) {
+    //     // 提示
+    //     this.$message({
+    //       type: "success",
+    //       message: "更新状态成功~",
+    //     });
 
-        // 刷新表格
-        this.getSubjectListData();
-      }
-    },
+    //     // 刷新表格
+    //     this.getSubjectListData();
+    //   }
+    // },
     // 删除
-    del(id) {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(async () => {
-          const res = await this.$axios.post("/subject/remove", { id });
+    // del(id) {
+    //   this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   })
+    //     .then(async () => {
+    //       const res = await this.$axios.post("/subject/remove", { id });
 
-          if (res.data.code === 200) {
-            // 提示
-            this.$message({
-              type: "success",
-              message: "删除成功~",
-            });
+    //       if (res.data.code === 200) {
+    //         // 提示
+    //         this.$message({
+    //           type: "success",
+    //           message: "删除成功~",
+    //         });
 
-            // 刷新表格
-            this.search();
-          }
-        })
-        .catch(() => {});
-    },
+    //         // 刷新表格
+    //         this.search();
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
     // 新增学科
     add() {
       this.$refs.subjectEditRef.mode = "add";

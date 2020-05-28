@@ -73,8 +73,13 @@
               :type="scope.row.status === 0 ? 'success' : 'info'"
               >{{ scope.row.status === 0 ? "启用" : "禁用" }}</el-button
             >
-            <el-button
+            <!-- <el-button
               @click="deleteUser(scope.row.id, scope.row.username)"
+              type="default"
+              >删除</el-button
+            > -->
+            <el-button
+              @click="del('/user/remove', scope.row.id)"
               type="default"
               >删除</el-button
             >
@@ -189,26 +194,26 @@ export default {
     //     this.search();
     //   }
     // },
-    deleteUser(id, username) {
-      this.$confirm(`确定删除 ${username} 该用户吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      })
-        .then(async () => {
-          const res = await this.$axios.post("/user/remove", { id });
-          if (res.data.code === 200) {
-            this.$message({
-              message: "删除成功~",
-              type: "success",
-            });
+    // deleteUser(id, username) {
+    //   this.$confirm(`确定删除 ${username} 该用户吗？`, "提示", {
+    //     confirmButtonText: "确定",
+    //     cancelButtonText: "取消",
+    //     type: "warning",
+    //   })
+    //     .then(async () => {
+    //       const res = await this.$axios.post("/user/remove", { id });
+    //       if (res.data.code === 200) {
+    //         this.$message({
+    //           message: "删除成功~",
+    //           type: "success",
+    //         });
 
-            // 重新查询
-            this.search();
-          }
-        })
-        .catch(() => {});
-    },
+    //         // 重新查询
+    //         this.search();
+    //       }
+    //     })
+    //     .catch(() => {});
+    // },
     add() {
       // 让新增用户的对话框显示出来
       this.$refs.userEditRef.userForm = {
