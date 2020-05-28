@@ -1,10 +1,23 @@
 <template>
   <div class="questionType">
     <div v-if="questionForm.type == 1">
-      单选的内容
+      <div v-for="item in questionForm.select_options" :key="item.label" class="item">
+        <!-- radio -->
+        <el-radio v-model="questionForm.single_select_answer" :label="item.label">{{item.label}}</el-radio>
+        <!-- input -->
+        <el-input v-model="item.text"></el-input>
+        <!-- 上传的子组件 -->
+      </div>
     </div>
     <div v-if="questionForm.type == 2">
-      多选的内容
+      
+      <div v-for="item in questionForm.select_options" :key="item.label" class="item">
+        <!-- checkbox -->
+        <el-checkbox v-model="questionForm.multiple_select_answer" :label="item.label"></el-checkbox>
+        <!-- input -->
+        <el-input style="margin-left:15px;" v-model="item.text"></el-input>
+        <!-- 上传的子组件 -->
+      </div>
     </div>
     <div v-if="questionForm.type == 3">
       <el-input
@@ -24,3 +37,12 @@ export default {
   props: ["questionForm"],
 };
 </script>
+
+<style lang="less">
+  .questionType{
+    .item{
+      display: flex;
+      align-items: center;
+    }
+  }
+</style>
