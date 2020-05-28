@@ -86,14 +86,24 @@
             >
           </el-radio-group>
         </el-form-item>
-        <hr class="hrMargin"/> 
+        <hr class="hrMargin" />
         <el-form-item label="试题标题" class="setMargin" prop="title">
-          <quill-editor :options="{placeholder:'请输入标题...'}" v-model="questionForm.title"></quill-editor>
+          <quill-editor
+            :options="{ placeholder: '请输入标题...' }"
+            v-model="questionForm.title"
+          ></quill-editor>
         </el-form-item>
-        <hr class="hrMargin">
+        <el-form-item :label="typeObj[questionForm.type]">
+          <!-- 单选/多选/简答的子组件 -->
+          <question-type :questionForm="questionForm"></question-type>
+        </el-form-item>
+        <hr class="hrMargin" />
         <el-form-item label="解析视频"></el-form-item>
         <el-form-item label="答案解析" class="setMargin" prop="answer_analyze">
-          <quill-editor :options="{placeholder: '请输入答案解析...'}" v-model="questionForm.answer_analyze"></quill-editor>
+          <quill-editor
+            :options="{ placeholder: '请输入答案解析...' }"
+            v-model="questionForm.answer_analyze"
+          ></quill-editor>
         </el-form-item>
         <hr class="hrMargin" />
         <el-form-item label="试题备注" prop="remark">
@@ -110,15 +120,17 @@
 
 <script>
 import { regionData } from "element-china-area-data";
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-import { quillEditor } from 'vue-quill-editor'
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+import { quillEditor } from "vue-quill-editor";
+import QuestionType from "./question-type";
 export default {
   name: "QuestionEdit",
   //   props: ['subjectList','enterpriseList'],
   components: {
-    quillEditor
+    quillEditor,
+    QuestionType,
   },
   props: {
     subjectList: Array,
@@ -140,9 +152,34 @@ export default {
         city: [], // 城市
         type: "1", // 题型
         difficulty: "1", // 难度
-        title: '', // 标题
-        answer_analyze: '', // 答案解析
-        remark: '' // 答案备注
+        title: "", // 标题
+        single_select_answer: "", // 单选答案
+        multiple_select_answer: [], // 多选答案
+        short_answer: "", // 简答答案
+        answer_analyze: "", // 答案解析
+        remark: "", // 答案备注
+        select_options: [
+          {
+            label: "A",
+            text: "shift",
+            image: "",
+          },
+          {
+            label: "B",
+            text: "pop",
+            image: "",
+          },
+          {
+            label: "C",
+            text: "splice",
+            image: "",
+          },
+          {
+            label: "D",
+            text: "slice",
+            image: "",
+          },
+        ],
       },
       rules: {
         subject: [{ required: true, message: "请选择学科", trigger: "change" }],
@@ -155,15 +192,13 @@ export default {
         difficulty: [
           { required: true, message: "请选择难度", trigger: "change" },
         ],
-        title: [
-          { required: true, message: "标题不能为空", trigger: "change" }
-        ],
+        title: [{ required: true, message: "标题不能为空", trigger: "change" }],
         answer_analyze: [
-          { required: true, message: "答案解析不能为空", trigger: "change" }
+          { required: true, message: "答案解析不能为空", trigger: "change" },
         ],
         remark: [
-          { required: true, message: "答案备注不能为空", trigger: "blur" }
-        ]
+          { required: true, message: "答案备注不能为空", trigger: "blur" },
+        ],
       },
     };
   },
