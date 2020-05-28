@@ -63,8 +63,13 @@
             <el-button @click="editUser(scope.row)" type="primary"
               >编辑</el-button
             >
-            <el-button
+            <!-- <el-button
               @click="changeStatus(scope.row.id)"
+              :type="scope.row.status === 0 ? 'success' : 'info'"
+              >{{ scope.row.status === 0 ? "启用" : "禁用" }}</el-button
+            > -->
+            <el-button
+              @click="changeStatus('/user/status',scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
               >{{ scope.row.status === 0 ? "启用" : "禁用" }}</el-button
             >
@@ -96,7 +101,10 @@
 <script>
 // 导入子组件
 import UserEdit from "./user-add-or-update";
+// 导入了混入对象
+import common from '@/mixins/common'
 export default {
+  mixins: [ common ],
   components: {
     UserEdit,
   },
@@ -168,19 +176,19 @@ export default {
       this.getUserListData();
     },
     // 更改当前行的状态
-    async changeStatus(id) {
-      const res = await this.$axios.post("/user/status", { id });
+    // async changeStatus(id) {
+    //   const res = await this.$axios.post("/user/status", { id });
 
-      if (res.data.code === 200) {
-        this.$message({
-          message: "更改状态成功~",
-          type: "success",
-        });
+    //   if (res.data.code === 200) {
+    //     this.$message({
+    //       message: "更改状态成功~",
+    //       type: "success",
+    //     });
 
-        // 重新查询
-        this.search();
-      }
-    },
+    //     // 重新查询
+    //     this.search();
+    //   }
+    // },
     deleteUser(id, username) {
       this.$confirm(`确定删除 ${username} 该用户吗？`, "提示", {
         confirmButtonText: "确定",
