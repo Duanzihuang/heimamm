@@ -9,7 +9,11 @@
       :before-upload="beforeAvatarUpload"
     >
       <div v-if="type === 'video'">
-        <video v-if="value" :src="BASE_URL + '/' + value" controls></video>
+        <video v-if="value" :src="BASE_URL + '/' + value" controls class="avatar"></video>
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </div>
+      <div v-else>
+        <img v-if="value" :src="BASE_URL + '/' + value" class="avatar"/>
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </div>
     </el-upload>

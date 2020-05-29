@@ -10,12 +10,13 @@
         <el-radio
           v-model="questionForm.single_select_answer"
           :label="item.label"
+          @change="changeValue"
           >{{ item.label }}</el-radio
         >
         <!-- input -->
         <el-input v-model="item.text"></el-input>
         <!-- 上传的子组件 -->
-        <upload-file style="margin-left:15px;"></upload-file>
+        <upload-file style="margin-left:15px;" v-model="item.image"></upload-file>
       </div>
     </div>
     <div v-if="questionForm.type == 2">
@@ -28,6 +29,7 @@
         <el-checkbox
           v-model="questionForm.multiple_select_answer"
           :label="item.label"
+          @change="changeValue"
         ></el-checkbox>
         <!-- input -->
         <el-input
@@ -35,7 +37,7 @@
           v-model="item.text"
         ></el-input>
         <!-- 上传的子组件 -->
-        <upload-file></upload-file>
+        <upload-file v-model="item.image"></upload-file>
       </div>
     </div>
     <div v-if="questionForm.type == 3">
@@ -44,6 +46,7 @@
         :rows="5"
         placeholder="请输入内容"
         v-model="questionForm.short_answer"
+        @change="changeValue"
       >
       </el-input>
     </div>
@@ -58,6 +61,11 @@ export default {
     UploadFile,
   },
   props: ["questionForm"],
+  methods: {
+    changeValue() {
+      this.$emit('childchange')
+    }
+  }
 };
 </script>
 

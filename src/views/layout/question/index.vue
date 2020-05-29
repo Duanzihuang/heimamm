@@ -198,7 +198,8 @@
         </el-pagination>
       </div>
     </el-card>
-    <question-edit ref="questionEditRef"
+    <question-edit
+      ref="questionEditRef"
       :subjectList="subjectList"
       :enterpriseList="enterpriseList"
       :stepObj="stepObj"
@@ -209,19 +210,19 @@
 </template>
 
 <script>
-import QuestionEdit from './question-add-or-update'
+import QuestionEdit from "./question-add-or-update";
 export default {
   name: "Question",
   components: {
-    QuestionEdit
+    QuestionEdit,
   },
   data() {
     return {
       subjectList: [], // 学科列表
       enterpriseList: [], // 企业列表
-      stepObj: { 1: "初级", 2: "中级", 3: "高级" }, //阶段
-      typeObj: { 1: "单选", 2: "多选", 3: "简答" }, //题型
-      difficultyObj: { 1: "简单", 2: "一般", 3: "困难" }, //难度
+      stepObj: { "1": "初级", "2": "中级", "3": "高级" }, //阶段
+      typeObj: { "1": "单选", "2": "多选", "3": "简答" }, //题型
+      difficultyObj: { "1": "简单", "2": "一般", "3": "困难" }, //难度
 
       searchForm: {
         // 搜索的时候要传递给后台的
@@ -355,11 +356,67 @@ export default {
     },
     // 新增
     add() {
-      this.$refs.questionEditRef.mode = 'add'
-      this.$refs.questionEditRef.dialogVisible = true
+      this.$refs.questionEditRef.mode = "add";
+      this.$refs.questionEditRef.questionForm = {
+        // 这个里面的所有值，将来是传递给服务器的
+        subject: "", // 学科
+        step: "", // 阶段
+        enterprise: "", // 企业
+        city: [], // 城市
+        type: "1", // 题型
+        difficulty: "1", // 难度
+        title: "", // 标题
+        single_select_answer: "", // 单选答案
+        multiple_select_answer: [], // 多选答案
+        short_answer: "", // 简答答案
+        answer_analyze: "", // 答案解析
+        remark: "", // 答案备注
+        video: "", // 上传的视频地址
+        select_options: [
+          {
+            label: "A",
+            text: "shift",
+            image: "",
+          },
+          {
+            label: "B",
+            text: "pop",
+            image: "",
+          },
+          {
+            label: "C",
+            text: "splice",
+            image: "",
+          },
+          {
+            label: "D",
+            text: "slice",
+            image: "",
+          },
+        ],
+      };
+      this.$refs.questionEditRef.dialogVisible = true;
     },
     // 修改
-    editSubject(row) {},
+    editSubject(row) {
+      this.$refs.questionEditRef.mode = "edit";
+      this.$refs.questionEditRef.questionForm = JSON.parse(JSON.stringify(row));
+      if (row.city) {
+        this.$refs.questionEditRef.questionForm.city = row.city.split(",");
+      } else {
+        this.$refs.questionEditRef.questionForm.city = [];
+      }
+
+      if (row.multiple_select_answer) {
+        this.$refs.questionEditRef.questionForm.multiple_select_answer = row.multiple_select_answer.split(
+          ","
+        );
+      } else {
+        this.$refs.questionEditRef.questionForm.multiple_select_answer = [];
+      }
+
+      this.$refs.questionEditRef.dialogVisible = true;
+    },
   },
   // filters: {
   //   formatType(val) {

@@ -37,7 +37,7 @@
               v-for="(value, name) in stepObj"
               :key="name"
               :label="value"
-              :value="name"
+              :value="+name"
             >
             </el-option>
           </el-select>
@@ -59,6 +59,7 @@
         </el-form-item>
         <el-form-item label="城市" prop="city">
           <el-cascader
+            class="selectWidth"
             size="large"
             :options="options"
             :props="{ value: 'label' }"
@@ -71,7 +72,7 @@
             <el-radio
               v-for="(value, name) in typeObj"
               :key="name"
-              :label="name"
+              :label="+name"
               >{{ value }}</el-radio
             >
           </el-radio-group>
@@ -81,7 +82,7 @@
             <el-radio
               v-for="(value, name) in difficultyObj"
               :key="name"
-              :label="name"
+              :label="+name"
               >{{ value }}</el-radio
             >
           </el-radio-group>
@@ -91,11 +92,18 @@
           <quill-editor
             :options="{ placeholder: '请输入标题...' }"
             v-model="questionForm.title"
+            @change="onEditorChange('title')"
           ></quill-editor>
         </el-form-item>
-        <el-form-item :label="typeObj[questionForm.type]">
+        <el-form-item
+          :label="typeObj[questionForm.type]"
+          :prop="questionTypeValidateObj[questionForm.type]"
+        >
           <!-- 单选/多选/简答的子组件 -->
-          <question-type :questionForm="questionForm"></question-type>
+          <question-type
+            :questionForm="questionForm"
+            @childchange="valiateQuestionType"
+          ></question-type>
         </el-form-item>
         <hr class="hrMargin" />
         <el-form-item label="解析视频">
@@ -106,6 +114,7 @@
           <quill-editor
             :options="{ placeholder: '请输入答案解析...' }"
             v-model="questionForm.answer_analyze"
+            @change="onEditorChange('answer_analyze')"
           ></quill-editor>
         </el-form-item>
         <hr class="hrMargin" />
@@ -128,14 +137,14 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { quillEditor } from "vue-quill-editor";
 import QuestionType from "./question-type";
-import UploadFile from './upload-file'
+import UploadFile from "./upload-file";
 export default {
   name: "QuestionEdit",
   //   props: ['subjectList','enterpriseList'],
   components: {
     quillEditor,
     QuestionType,
-    UploadFile
+    UploadFile,
   },
   props: {
     subjectList: Array,
@@ -144,11 +153,23 @@ export default {
     typeObj: Object,
     difficultyObj: Object,
   },
+  watch: {
+    dialogVisible(newValue) {
+      if (!newValue) {
+        this.$refs.questionFormRef.clearValidate();
+      }
+    },
+  },
   data() {
     return {
       mode: "", // add 新增 edit 修改
       dialogVisible: false, // 控制dialog的显示及隐藏
       options: regionData,
+      questionTypeValidateObj: {
+        1: "single_select_answer", // 单选
+        2: "multiple_select_answer", // 多选
+        3: "short_answer", // 简答
+      },
       questionForm: {
         // 这个里面的所有值，将来是传递给服务器的
         subject: "", // 学科
@@ -163,7 +184,7 @@ export default {
         short_answer: "", // 简答答案
         answer_analyze: "", // 答案解析
         remark: "", // 答案备注
-        video: "" , // 上传的视频地址
+        video: "", // 上传的视频地址
         select_options: [
           {
             label: "A",
@@ -205,12 +226,60 @@ export default {
         remark: [
           { required: true, message: "答案备注不能为空", trigger: "blur" },
         ],
+        single_select_answer: [
+          { required: true, message: "单选答案不能为空", trigger: "blur" },
+        ],
+        multiple_select_answer: [
+          { required: true, message: "多选答案不能为空", trigger: "blur" },
+        ],
+        short_answer: [
+          { required: true, message: "简答答案不能为空", trigger: "blur" },
+        ],
       },
     };
   },
   methods: {
+    // 对富文本编辑器中字段进行校验
+    onEditorChange(value) {
+      // 对部分表单字段进行校验的方法
+      this.$refs.questionFormRef.validateField(value);
+    },
+    // 对QuestionType子组件中的 单选、多选、简答及时校验
+    valiateQuestionType() {
+      this.$refs.questionFormRef.validateField([
+        "single_select_answer",
+        "multiple_select_answer",
+        "short_answer",
+      ]);
+    },
     // 新增 & 修改
-    submit() {},
+    submit() {
+      this.$refs.questionFormRef.validate(async (valid) => {
+        if (!valid) return;
+
+        let res = null;
+        if (this.mode === "add") {
+          res = await this.$axios.post("/question/add", this.questionForm);
+        } else {
+          this.questionForm.city = this.questionForm.city.join(',')
+          res = await this.$axios.post("/question/edit", this.questionForm);
+        }
+
+        if (res.data.code === 200) {
+          // 提示
+          this.$message({
+            type: "success",
+            message: this.mode === "add" ? "新增成功~" : "编辑成功~",
+          });
+
+          // 关闭当前对话框
+          this.dialogVisible = false;
+
+          // 调用父组件的search
+          this.$parent.search();
+        }
+      });
+    },
   },
 };
 </script>
