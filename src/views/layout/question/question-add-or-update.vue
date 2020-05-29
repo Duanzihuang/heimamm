@@ -261,7 +261,7 @@ export default {
         if (this.mode === "add") {
           res = await this.$axios.post("/question/add", this.questionForm);
         } else {
-          this.questionForm.city = this.questionForm.city.join(',')
+          this.questionForm.city = this.questionForm.city.join(",");
           res = await this.$axios.post("/question/edit", this.questionForm);
         }
 
