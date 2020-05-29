@@ -162,6 +162,7 @@ export default {
         short_answer: "", // 简答答案
         answer_analyze: "", // 答案解析
         remark: "", // 答案备注
+        video: "" , // 上传的视频地址
         select_options: [
           {
             label: "A",

@@ -19,6 +19,8 @@ import Slot1 from "@/test/slot1/parent";
 import Slot2 from "@/test/slot2/parent";
 import Slot3 from "@/test/slot3/index"
 import Parent from '@/test/parent-child-brother/parent'
+import VModel from '@/test/v-model'
+import VModelParent from '@/test/v-model/parent'
 
 const router = new VueRouter({
   routes: [
@@ -38,6 +40,8 @@ const router = new VueRouter({
     { path: "/slot2", component: Slot2 },
     { path: "/slot3",component: Slot3},
     { path: "/parent", component: Parent },
+    { path: "/vmodel", component: VModel },
+    { path: "/vmodelparent", component: VModelParent }
   ],
 });
 

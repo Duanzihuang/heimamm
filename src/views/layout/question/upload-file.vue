@@ -28,7 +28,11 @@ export default {
   },
   methods: {
     // 上传成功之后的回调
-    handleAvatarSuccess(res) {},
+    handleAvatarSuccess(res) {
+      // $emit()
+      // $parent
+      // res.data.url ===> 父组件(question-add-or-update.vue) questionForm.video
+    },
     // 上传之前的回调(一般限制文件类型和大小)
     beforeAvatarUpload(file) {
       if (this.type === "video") {
