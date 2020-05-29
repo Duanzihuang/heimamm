@@ -8,18 +8,23 @@
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload"
     >
-      <i class="el-icon-plus avatar-uploader-icon"></i>
+      <div v-if="type === 'video'">
+        <video v-if="value" :src="BASE_URL + '/' + value" controls></video>
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </div>
     </el-upload>
   </div>
 </template>
 
 <script>
 export default {
+  // props: ['type']
   props: {
     type: {
       type: String, // 这里表明 type 类型是字符串
       default: "image", // 这个代表 type 的值，如果没有传递默认就是image
     },
+    value: String,
   },
   data() {
     return {
@@ -29,9 +34,9 @@ export default {
   methods: {
     // 上传成功之后的回调
     handleAvatarSuccess(res) {
-      // $emit()
-      // $parent
-      // res.data.url ===> 父组件(question-add-or-update.vue) questionForm.video
+      // 1、res.data.url ===> 父组件(question-add-or-update.vue) questionForm.video
+      this.$emit("input", res.data.url);
+      // 2、让我们该子组件中的内容，根据实际情况进行渲染（有可能渲染图片、有可能渲染视频）
     },
     // 上传之前的回调(一般限制文件类型和大小)
     beforeAvatarUpload(file) {

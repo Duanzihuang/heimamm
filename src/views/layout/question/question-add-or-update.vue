@@ -99,7 +99,8 @@
         </el-form-item>
         <hr class="hrMargin" />
         <el-form-item label="解析视频">
-          <upload-file type="video"></upload-file>
+          <!-- <upload-file type="video" :value="questionForm.video" @input="xxx"></upload-file> -->
+          <upload-file type="video" v-model="questionForm.video"></upload-file>
         </el-form-item>
         <el-form-item label="答案解析" class="setMargin" prop="answer_analyze">
           <quill-editor
