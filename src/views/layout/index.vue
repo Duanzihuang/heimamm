@@ -83,8 +83,6 @@ export default {
   created() {
     this.defaultActive = this.$route.fullPath;
     this.getUserInfoData();
-
-    console.log(this.$router);
   },
   methods: {
     // 获取用户信息

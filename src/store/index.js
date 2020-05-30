@@ -7,7 +7,7 @@ const store = new Vuex.Store({
     // 仓库中要操作的数据
     state : {
         // 定义将来仓库中要操作的数据
-        userInfo: null
+        userInfo: {}
     },
     // 所有获取仓库中值的代码，写在getters 中
     getters: {
