@@ -363,8 +363,8 @@ export default {
         step: "", // 阶段
         enterprise: "", // 企业
         city: [], // 城市
-        type: "1", // 题型
-        difficulty: "1", // 难度
+        type: 1, // 题型
+        difficulty: 1, // 难度
         title: "", // 标题
         single_select_answer: "", // 单选答案
         multiple_select_answer: [], // 多选答案
