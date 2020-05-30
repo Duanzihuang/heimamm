@@ -84,6 +84,10 @@ export default {
       if (res.data.code === 200) {
         this.avatar = process.env.VUE_APP_BASEURL + "/" + res.data.data.avatar;
         this.username = res.data.data.username;
+
+        // 保存到仓库中
+        // 触发 mutations 中的方法
+        this.$store.commit('setUserInfo',res.data.data)
       } else if (res.data.code === 206){
         // 删除token
 
