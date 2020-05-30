@@ -24,6 +24,17 @@
           class="el-menu-vertical-demo"
           :collapse="isCollapse"
         >
+          <el-menu-item
+            v-for="item in $router.options.routes[2].children"
+            :key="item.path"
+            :index="item.meta.fullPath"
+            v-show="item.meta.roles.includes($store.getters.getUserInfo.role)"
+          >
+            <i :class="item.meta.icon"></i>
+            <span slot="title">{{ item.meta.title }}</span>
+          </el-menu-item>
+
+          <!-- 
          <el-menu-item index="/layout/welcome">
             <i class="el-icon-date"></i>
             <span slot="title">个人信息</span>
@@ -48,6 +59,7 @@
             <i class="el-icon-notebook-2"></i>
             <span slot="title">学科列表</span>
           </el-menu-item>
+          -->
         </el-menu>
       </el-aside>
       <el-main style="background-color:#e8e9ec;">
@@ -65,12 +77,14 @@ export default {
       avatar: "", // 用户的头像
       username: "", // 昵称
       isCollapse: false, // 是否收起折叠菜单
-      defaultActive: '' // 菜单选中的值
+      defaultActive: "", // 菜单选中的值
     };
   },
   created() {
-    this.defaultActive = this.$route.fullPath
+    this.defaultActive = this.$route.fullPath;
     this.getUserInfoData();
+
+    console.log(this.$router);
   },
   methods: {
     // 获取用户信息
@@ -87,10 +101,9 @@ export default {
 
         // 保存到仓库中
         // 触发 mutations 中的方法
-        this.$store.commit('setUserInfo',res.data.data)
-      } else if (res.data.code === 206){
+        this.$store.commit("setUserInfo", res.data.data);
+      } else if (res.data.code === 206) {
         // 删除token
-
         // 跳转回登录页面
       }
     },
