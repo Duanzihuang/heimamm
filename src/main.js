@@ -14,6 +14,7 @@ import '@/plugins/element.js'
 import '@/utils/request.js'
 
 import router from '@/router'
+import store from '@/store'
 
 // import UserEdit from '@/views/layout/user/user-add-or-update'
 // 全局注册
@@ -22,5 +23,6 @@ import router from '@/router'
 
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app')
