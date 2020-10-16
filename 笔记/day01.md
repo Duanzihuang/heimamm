@@ -65,6 +65,8 @@ git clone https://gitee.com/phper_leo/heimamm.git
 
 ![image-20191204205818558.png](assets/1576070382513-ec62fa2f-6d97-4b55-9fcc-f11403756b40.png)
 
+![image-20201012171837783](assets/image-20201012171837783.png)
+
 5. 项目安装
    1. 在确保主界面的MySQL和Apache都启动成功的情况下
    2.   打开浏览器访问http://127.0.0.1/heimamm/public/

@@ -2,9 +2,14 @@
   <div class="userEdit">
     <el-dialog center :visible.sync="dialogVisible" width="600px">
       <div slot="title" class="title">
-        {{ mode === "add" ? "新增用户" : "修改用户" }}
+        {{ mode === 'add' ? '新增用户' : '修改用户' }}
       </div>
-      <el-form :model="userForm" :rules="rules" ref="userEditFormRef" label-width="80px">
+      <el-form
+        :model="userForm"
+        :rules="rules"
+        ref="userEditFormRef"
+        label-width="80px"
+      >
         <el-form-item label="用户名" prop="username">
           <el-input v-model="userForm.username"></el-input>
         </el-form-item>
@@ -42,80 +47,80 @@
 
 <script>
 export default {
-  name: "UserEdit",
+  name: 'UserEdit',
   props: {
     mode: {
       type: String,
       default: 'add'
     }
   },
-  data() {
+  data () {
     return {
       dialogVisible: false,
       // mode: "", // 模式，add 代表新增  edit 代表修改
       userForm: {
-        username: "", // 用户名
-        email: "", // 邮箱
-        phone: "", // 手机号
-        role_id: "", // 角色 1：超级管理员 2：管理员 3：老师 4：学生
-        status: "", // 状态 1：启用 0：禁用
-        remark: "", // 备注
+        username: '', // 用户名
+        email: '', // 邮箱
+        phone: '', // 手机号
+        role_id: '', // 角色 1：超级管理员 2：管理员 3：老师 4：学生
+        status: '', // 状态 1：启用 0：禁用
+        remark: '' // 备注
       },
       rules: {
         username: [
-          { required: true, message: "用户名不能为空", trigger: "blur" },
+          { required: true, message: '用户名不能为空', trigger: 'blur' }
         ],
         email: [
           {
             required: true,
             validator: (rule, value, callback) => {
               if (!value) {
-                callback(new Error("邮箱不能为空"));
-                return;
+                callback(new Error('邮箱不能为空'))
+                return
               }
 
               // 邮箱的正则
-              const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
+              const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/
               if (!reg.test(value)) {
-                return callback(new Error("邮箱不合法!"));
+                return callback(new Error('邮箱不合法!'))
               }
 
-              callback();
-            },
-          },
+              callback()
+            }
+          }
         ],
         phone: [
           {
             required: true,
             validator: (rule, value, callback) => {
               if (!value) {
-                callback(new Error("手机号不能为空"));
-                return;
+                callback(new Error('手机号不能为空'))
+                return
               }
 
               // 手机的正则
-              const reg = /^1[3456789][0-9]{9}$/;
+              const reg = /^1[3456789][0-9]{9}$/
               if (!reg.test(value)) {
-                return callback(new Error("手机号不合法!"));
+                return callback(new Error('手机号不合法!'))
               }
 
-              callback();
+              callback()
             },
-            trigger: "blur",
-          },
+            trigger: 'blur'
+          }
         ],
         role_id: [
-          { required: true, message: "请选择用户角色", trigger: "change" },
+          { required: true, message: '请选择用户角色', trigger: 'change' }
         ],
         status: [
-          { required: true, message: "请选择用户状态", trigger: "change" },
+          { required: true, message: '请选择用户状态', trigger: 'change' }
         ],
-        remark: [{ required: true, message: "备注不能为空", trigger: "blur" }],
-      },
-    };
+        remark: [{ required: true, message: '备注不能为空', trigger: 'blur' }]
+      }
+    }
   },
   methods: {
-    submit() {
+    submit () {
       this.$refs.userEditFormRef.validate(async valid => {
         if (!valid) return
 
@@ -126,7 +131,7 @@ export default {
           // delete this.userForm.create_time
           // delete this.userForm.update_time
           // 修改
-          res = await this.$axios.post('/user/edit',this.userForm)
+          res = await this.$axios.post('/user/edit', this.userForm)
         }
 
         if (res.data.code === 200) {
@@ -134,7 +139,7 @@ export default {
           this.$message({
             message: this.mode === 'add' ? '新增成功~' : '编辑成功~',
             type: 'success'
-          });
+          })
 
           // 关闭当前的对话框
           this.dialogVisible = false
@@ -148,9 +153,9 @@ export default {
           this.$message.error(res.data.message)
         }
       })
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="less">

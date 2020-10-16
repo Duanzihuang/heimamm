@@ -51,7 +51,7 @@
           <template slot-scope="scope">
             <span
               :style="{ color: scope.row.status === 0 ? 'red' : '#87cd67' }"
-              >{{ scope.row.status === 0 ? "禁用" : "启用" }}</span
+              >{{ scope.row.status === 0 ? '禁用' : '启用' }}</span
             >
           </template>
         </el-table-column>
@@ -64,7 +64,7 @@
               @click="changeStatus(scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
             >
-              {{ scope.row.status === 0 ? "启用" : "禁用" }}
+              {{ scope.row.status === 0 ? '启用' : '禁用' }}
             </el-button>
             <el-button @click="del(scope.row.id)">删除</el-button>
           </template>
@@ -90,116 +90,116 @@
 
 <script>
 // 导入子组件
-import EnterpriseEdit from "./enterprise-add-or-update";
+import EnterpriseEdit from './enterprise-add-or-update'
 export default {
-  name: "EnterPrise",
+  name: 'EnterPrise',
   components: {
     // 局部注册
-    EnterpriseEdit,
+    EnterpriseEdit
   },
-  data() {
+  data () {
     return {
       searchForm: {
-        eid: "", // 企业编号
-        name: "", // 企业名称
-        username: "", // 创建者
-        status: "", // 状态
+        eid: '', // 企业编号
+        name: '', // 企业名称
+        username: '', // 创建者
+        status: '' // 状态
       },
       page: 1, // 页码
       limit: 2, // 页容量
       enterpriseList: [], // table展示所需要的数据
-      total: 0, // 总条数
-    };
+      total: 0 // 总条数
+    }
   },
-  created() {
-    this.getEnterpriseListData();
+  created () {
+    this.getEnterpriseListData()
   },
   methods: {
-    async getEnterpriseListData() {
-      const res = await this.$axios.get("/enterprise/list", {
+    async getEnterpriseListData () {
+      const res = await this.$axios.get('/enterprise/list', {
         params: {
           page: this.page,
           limit: this.limit,
-          ...this.searchForm,
-        },
-      });
+          ...this.searchForm
+        }
+      })
 
       if (res.data.code === 200) {
-        this.enterpriseList = res.data.data.items;
+        this.enterpriseList = res.data.data.items
 
-        this.total = res.data.data.pagination.total;
+        this.total = res.data.data.pagination.total
       }
     },
     // 查询
-    search() {
-      this.page = 1;
+    search () {
+      this.page = 1
 
-      this.getEnterpriseListData();
+      this.getEnterpriseListData()
     },
     // 清除
-    clear() {
-      this.$refs.searchFormRef.resetFields();
+    clear () {
+      this.$refs.searchFormRef.resetFields()
 
-      this.search();
+      this.search()
     },
     // 页容量发生改变
-    sizeChange(val) {
-      this.limit = val;
+    sizeChange (val) {
+      this.limit = val
 
-      this.search();
+      this.search()
     },
     // 当前页码发生了改变
-    currentChange(val) {
-      this.page = val;
+    currentChange (val) {
+      this.page = val
 
-      this.getEnterpriseListData();
+      this.getEnterpriseListData()
     },
-    async changeStatus(id) {
-      const res = await this.$axios.post("/enterprise/status", { id });
+    async changeStatus (id) {
+      const res = await this.$axios.post('/enterprise/status', { id })
       if (res.data.code === 200) {
         // 提示
         this.$message({
-          type: "success",
-          message: "更改状态成功~",
-        });
+          type: 'success',
+          message: '更改状态成功~'
+        })
 
         // 重新调用获取方法刷新
-        this.getEnterpriseListData();
+        this.getEnterpriseListData()
       }
     },
-    del(id) {
-      this.$confirm("确定删除该数据吗？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+    del (id) {
+      this.$confirm('确定删除该数据吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(async () => {
-          const res = await this.$axios.post("/enterprise/remove", { id });
+          const res = await this.$axios.post('/enterprise/remove', { id })
 
           if (res.data.code === 200) {
             // 提示
             this.$message({
-              type: "success",
-              message: "删除成功~",
-            });
+              type: 'success',
+              message: '删除成功~'
+            })
 
             // 调用search方法刷新
-            this.search();
+            this.search()
           }
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     // 新增企业
-    add() {
-      this.$refs.enterpriseEditRef.mode = "add";
+    add () {
+      this.$refs.enterpriseEditRef.mode = 'add'
       this.$refs.enterpriseEditRef.enterpriseForm = {
-        eid: "", // 企业编号
-        name: "", // 企业名称
-        short_name: "", // 简称
-        intro: "", // 企业简介
-        remark: "", // 备注
+        eid: '', // 企业编号
+        name: '', // 企业名称
+        short_name: '', // 简称
+        intro: '', // 企业简介
+        remark: '' // 备注
       }
-      this.$refs.enterpriseEditRef.dialogVisible = true;
+      this.$refs.enterpriseEditRef.dialogVisible = true
 
       // this.$nextTick(() => {
       //   // this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.resetFields()
@@ -207,23 +207,23 @@ export default {
       // })
     },
     // 修改企业
-    editEnterprise(row) {
-      const { id, eid, intro, name, short_name, remark } = row;
+    editEnterprise (row) {
+      const { id, eid, intro, name, short_name, remark } = row
       this.$refs.enterpriseEditRef.enterpriseForm = {
         id,
         eid,
         name,
         short_name,
         intro,
-        remark,
-      };
-      this.$refs.enterpriseEditRef.mode = "edit";
-      this.$refs.enterpriseEditRef.dialogVisible = true;
+        remark
+      }
+      this.$refs.enterpriseEditRef.mode = 'edit'
+      this.$refs.enterpriseEditRef.dialogVisible = true
 
       // this.$nextTick(() => {
       //   this.$refs.enterpriseEditRef.$refs.enterpriseFormRef.clearValidate()
       // })
-    },
-  },
-};
+    }
+  }
+}
 </script>

@@ -69,18 +69,16 @@
               >{{ scope.row.status === 0 ? "启用" : "禁用" }}</el-button
             > -->
             <el-button
-              @click="changeStatus('/user/status',scope.row.id)"
+              @click="changeStatus('/user/status', scope.row.id)"
               :type="scope.row.status === 0 ? 'success' : 'info'"
-              >{{ scope.row.status === 0 ? "启用" : "禁用" }}</el-button
+              >{{ scope.row.status === 0 ? '启用' : '禁用' }}</el-button
             >
             <!-- <el-button
               @click="deleteUser(scope.row.id, scope.row.username)"
               type="default"
               >删除</el-button
             > -->
-            <el-button
-              @click="del('/user/remove', scope.row.id)"
-              type="default"
+            <el-button @click="del('/user/remove', scope.row.id)" type="default"
               >删除</el-button
             >
           </template>
@@ -105,81 +103,81 @@
 
 <script>
 // 导入子组件
-import UserEdit from "./user-add-or-update";
+import UserEdit from './user-add-or-update'
 // 导入了混入对象
 import common from '@/mixins/common'
 export default {
-  mixins: [ common ],
+  mixins: [common],
   components: {
-    UserEdit,
+    UserEdit
   },
-  name: "UserList",
-  data() {
+  name: 'UserList',
+  data () {
     return {
       searchForm: {
-        username: "", // 昵称
-        email: "", // 邮箱
-        role_id: "", // 角色数字 1、超级管理员 2管理员、3老师、 4学生
+        username: '', // 昵称
+        email: '', // 邮箱
+        role_id: '' // 角色数字 1、超级管理员 2管理员、3老师、 4学生
       },
       page: 1, // 查询时候的页码
       limit: 2, // 查询时候的页容量(每页查询多少条)
       userList: [], // 展示用户列表所需要的数据
       total: 0, // 总条数，分页时候用得着
-      mode: "add",
-    };
+      mode: 'add'
+    }
   },
-  created() {
+  created () {
     // 获取用户列表数据，用于内容展示
     // this.getUserListData();
     this.getListData()
   },
   methods: {
-    async getListData() {
-      const res = await this.$axios.get("/user/list", {
+    async getListData () {
+      const res = await this.$axios.get('/user/list', {
         params: {
           page: this.page,
           limit: this.limit,
-          ...this.searchForm,
+          ...this.searchForm
           //   username: this.searchForm.username,
           //   email: this.searchForm.email,
           //   role_id: this.searchForm.role_id
-        },
-      });
+        }
+      })
 
       if (res.data.code === 200) {
-        this.userList = res.data.data.items;
+        this.userList = res.data.data.items
 
-        this.total = res.data.data.pagination.total;
+        this.total = res.data.data.pagination.total
       }
     },
     // 搜索
-    search() {
-      this.page = 1; // 从第一页开始搜索
+    search () {
+      this.page = 1 // 从第一页开始搜索
 
-      this.getListData();
+      this.getListData()
     },
     // 清除
-    clear() {
+    clear () {
       // this.searchForm.username = ''
       // this.searchForm.email = ''
       // this.searchForm.role_id = ''
       // 重置表单项的内容
       // 前提：我们form表单的 el-form-item 上面必须设置prop
-      this.$refs.searchFormRef.resetFields();
+      this.$refs.searchFormRef.resetFields()
 
-      this.search();
+      this.search()
     },
     // 分页条的页容量发生了改变
-    handleSizeChange(val) {
-      this.limit = val;
+    handleSizeChange (val) {
+      this.limit = val
 
-      this.search();
+      this.search()
     },
     // 分页条的当前页发生了改变
-    handleCurrentChange(val) {
-      this.page = val;
+    handleCurrentChange (val) {
+      this.page = val
 
-      this.getListData();
+      this.getListData()
     },
     // 更改当前行的状态
     // async changeStatus(id) {
@@ -215,38 +213,38 @@ export default {
     //     })
     //     .catch(() => {});
     // },
-    add() {
+    add () {
       // 让新增用户的对话框显示出来
       this.$refs.userEditRef.userForm = {
-        username: "", // 用户名
-        email: "", // 邮箱
-        phone: "", // 手机号
-        role_id: "", // 角色 1：超级管理员 2：管理员 3：老师 4：学生
-        status: "", // 状态 1：启用 0：禁用
-        remark: "", // 备注
-      };
-      
+        username: '', // 用户名
+        email: '', // 邮箱
+        phone: '', // 手机号
+        role_id: '', // 角色 1：超级管理员 2：管理员 3：老师 4：学生
+        status: '', // 状态 1：启用 0：禁用
+        remark: '' // 备注
+      }
+
       this.mode = 'add'
-      this.$refs.userEditRef.dialogVisible = true;
+      this.$refs.userEditRef.dialogVisible = true
       // this.$refs.userEditRef.mode = "add";
       this.$nextTick(() => {
-          // dialog中的form表单渲染完毕之后，会自动执行该回调函数
-          this.$refs.userEditRef.$refs.userEditFormRef.clearValidate()
+        // dialog中的form表单渲染完毕之后，会自动执行该回调函数
+        this.$refs.userEditRef.$refs.userEditFormRef.clearValidate()
 
-          // 要想使用 clearValidate 和 resetFields 需要给el-form-item 设置prop
-          // this.$refs.userEditRef.$refs.userEditFormRef.resetFields()
+        // 要想使用 clearValidate 和 resetFields 需要给el-form-item 设置prop
+        // this.$refs.userEditRef.$refs.userEditFormRef.resetFields()
       })
     },
     // 修改用户
-    editUser(row) {
-      this.mode = "edit";
+    editUser (row) {
+      this.mode = 'edit'
       // this.$refs.userEditRef.userForm = {...row}
       this.$refs.userEditRef.userForm = JSON.parse(JSON.stringify(row))
-      this.$refs.userEditRef.dialogVisible = true;
+      this.$refs.userEditRef.dialogVisible = true
       this.$nextTick(() => {
         this.$refs.userEditRef.$refs.userEditFormRef.clearValidate()
       })
-    },
-  },
-};
+    }
+  }
+}
 </script>
