@@ -2,7 +2,7 @@
   <div class="questionEdit">
     <el-dialog :visible.sync="dialogVisible" fullscreen>
       <div slot="title" class="title">
-        {{ mode === "add" ? "新增试题" : "编辑试题" }}
+        {{ mode === 'add' ? '新增试题' : '编辑试题' }}
       </div>
       <el-form
         class="form"
@@ -131,157 +131,157 @@
 </template>
 
 <script>
-import { regionData } from "element-china-area-data";
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-import { quillEditor } from "vue-quill-editor";
-import QuestionType from "./question-type";
-import UploadFile from "./upload-file";
+import { regionData } from 'element-china-area-data'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
+import QuestionType from './question-type'
+import UploadFile from './upload-file'
 export default {
-  name: "QuestionEdit",
+  name: 'QuestionEdit',
   //   props: ['subjectList','enterpriseList'],
   components: {
     quillEditor,
     QuestionType,
-    UploadFile,
+    UploadFile
   },
   props: {
     subjectList: Array,
     enterpriseList: Array,
     stepObj: Object,
     typeObj: Object,
-    difficultyObj: Object,
+    difficultyObj: Object
   },
   watch: {
-    dialogVisible(newValue) {
+    dialogVisible (newValue) {
       if (!newValue) {
-        this.$refs.questionFormRef.clearValidate();
+        this.$refs.questionFormRef.clearValidate()
       }
-    },
+    }
   },
-  data() {
+  data () {
     return {
-      mode: "", // add 新增 edit 修改
+      mode: '', // add 新增 edit 修改
       dialogVisible: false, // 控制dialog的显示及隐藏
       options: regionData,
       questionTypeValidateObj: {
-        1: "single_select_answer", // 单选
-        2: "multiple_select_answer", // 多选
-        3: "short_answer", // 简答
+        1: 'single_select_answer', // 单选
+        2: 'multiple_select_answer', // 多选
+        3: 'short_answer' // 简答
       },
       questionForm: {
         // 这个里面的所有值，将来是传递给服务器的
-        subject: "", // 学科
-        step: "", // 阶段
-        enterprise: "", // 企业
+        subject: '', // 学科
+        step: '', // 阶段
+        enterprise: '', // 企业
         city: [], // 城市
         type: 1, // 题型
         difficulty: 1, // 难度
-        title: "", // 标题
-        single_select_answer: "", // 单选答案
+        title: '', // 标题
+        single_select_answer: '', // 单选答案
         multiple_select_answer: [], // 多选答案
-        short_answer: "", // 简答答案
-        answer_analyze: "", // 答案解析
-        remark: "", // 答案备注
-        video: "", // 上传的视频地址
+        short_answer: '', // 简答答案
+        answer_analyze: '', // 答案解析
+        remark: '', // 答案备注
+        video: '', // 上传的视频地址
         select_options: [
           {
-            label: "A",
-            text: "shift",
-            image: "",
+            label: 'A',
+            text: 'shift',
+            image: ''
           },
           {
-            label: "B",
-            text: "pop",
-            image: "",
+            label: 'B',
+            text: 'pop',
+            image: ''
           },
           {
-            label: "C",
-            text: "splice",
-            image: "",
+            label: 'C',
+            text: 'splice',
+            image: ''
           },
           {
-            label: "D",
-            text: "slice",
-            image: "",
-          },
-        ],
+            label: 'D',
+            text: 'slice',
+            image: ''
+          }
+        ]
       },
       rules: {
-        subject: [{ required: true, message: "请选择学科", trigger: "change" }],
-        step: [{ required: true, message: "请选择阶段", trigger: "change" }],
+        subject: [{ required: true, message: '请选择学科', trigger: 'change' }],
+        step: [{ required: true, message: '请选择阶段', trigger: 'change' }],
         enterprise: [
-          { required: true, message: "请选择企业", trigger: "change" },
+          { required: true, message: '请选择企业', trigger: 'change' }
         ],
-        city: [{ required: true, message: "请选择城市", trigger: "change" }],
-        type: [{ required: true, message: "请选择题型", trigger: "change" }],
+        city: [{ required: true, message: '请选择城市', trigger: 'change' }],
+        type: [{ required: true, message: '请选择题型', trigger: 'change' }],
         difficulty: [
-          { required: true, message: "请选择难度", trigger: "change" },
+          { required: true, message: '请选择难度', trigger: 'change' }
         ],
-        title: [{ required: true, message: "标题不能为空", trigger: "change" }],
+        title: [{ required: true, message: '标题不能为空', trigger: 'change' }],
         answer_analyze: [
-          { required: true, message: "答案解析不能为空", trigger: "change" },
+          { required: true, message: '答案解析不能为空', trigger: 'change' }
         ],
         remark: [
-          { required: true, message: "答案备注不能为空", trigger: "blur" },
+          { required: true, message: '答案备注不能为空', trigger: 'blur' }
         ],
         single_select_answer: [
-          { required: true, message: "单选答案不能为空", trigger: "blur" },
+          { required: true, message: '单选答案不能为空', trigger: 'blur' }
         ],
         multiple_select_answer: [
-          { required: true, message: "多选答案不能为空", trigger: "blur" },
+          { required: true, message: '多选答案不能为空', trigger: 'blur' }
         ],
         short_answer: [
-          { required: true, message: "简答答案不能为空", trigger: "blur" },
-        ],
-      },
-    };
+          { required: true, message: '简答答案不能为空', trigger: 'blur' }
+        ]
+      }
+    }
   },
   methods: {
     // 对富文本编辑器中字段进行校验
-    onEditorChange(value) {
+    onEditorChange (value) {
       // 对部分表单字段进行校验的方法
-      this.$refs.questionFormRef.validateField(value);
+      this.$refs.questionFormRef.validateField(value)
     },
     // 对QuestionType子组件中的 单选、多选、简答及时校验
-    valiateQuestionType() {
+    valiateQuestionType () {
       this.$refs.questionFormRef.validateField([
-        "single_select_answer",
-        "multiple_select_answer",
-        "short_answer",
-      ]);
+        'single_select_answer',
+        'multiple_select_answer',
+        'short_answer'
+      ])
     },
     // 新增 & 修改
-    submit() {
-      this.$refs.questionFormRef.validate(async (valid) => {
-        if (!valid) return;
+    submit () {
+      this.$refs.questionFormRef.validate(async valid => {
+        if (!valid) return
 
-        let res = null;
-        if (this.mode === "add") {
-          res = await this.$axios.post("/question/add", this.questionForm);
+        let res = null
+        if (this.mode === 'add') {
+          res = await this.$axios.post('/question/add', this.questionForm)
         } else {
-          this.questionForm.city = this.questionForm.city.join(",");
-          res = await this.$axios.post("/question/edit", this.questionForm);
+          this.questionForm.city = this.questionForm.city.join(',')
+          res = await this.$axios.post('/question/edit', this.questionForm)
         }
 
         if (res.data.code === 200) {
           // 提示
           this.$message({
-            type: "success",
-            message: this.mode === "add" ? "新增成功~" : "编辑成功~",
-          });
+            type: 'success',
+            message: this.mode === 'add' ? '新增成功~' : '编辑成功~'
+          })
 
           // 关闭当前对话框
-          this.dialogVisible = false;
+          this.dialogVisible = false
 
           // 调用父组件的search
-          this.$parent.search();
+          this.$parent.search()
         }
-      });
-    },
-  },
-};
+      })
+    }
+  }
+}
 </script>
 
 <style lang="less">

@@ -16,7 +16,10 @@
         <!-- input -->
         <el-input v-model="item.text"></el-input>
         <!-- 上传的子组件 -->
-        <upload-file style="margin-left:15px;" v-model="item.image"></upload-file>
+        <upload-file
+          style="margin-left:15px;"
+          v-model="item.image"
+        ></upload-file>
       </div>
     </div>
     <div v-if="questionForm.type == 2">
@@ -54,19 +57,19 @@
 </template>
 
 <script>
-import UploadFile from "./upload-file";
+import UploadFile from './upload-file'
 export default {
-  name: "QuestionType",
+  name: 'QuestionType',
   components: {
-    UploadFile,
+    UploadFile
   },
-  props: ["questionForm"],
+  props: ['questionForm'],
   methods: {
-    changeValue() {
+    changeValue () {
       this.$emit('childchange')
     }
   }
-};
+}
 </script>
 
 <style lang="less">

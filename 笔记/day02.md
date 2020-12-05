@@ -12,120 +12,90 @@
 
 ```vue
 <template>
-  <div class="register">
-    <el-dialog width="600px" center :visible.sync="dialogVisible">
-      <div slot="title" class="title">
-        注册
-      </div>
-      <el-form ref="registerFormRef" :model="resgisterForm" :rules="rules" label-width="100px">
+  <div>
+    <el-dialog title="注册" :visible.sync="dialogVisible" width="600px" center>
+      <!--
+        model: 提交给服务器的模型值
+       -->
+      <el-form
+        :model="registerForm"
+        ref="registerFormRef"
+        :rules="rules"
+        label-width="70px"
+        label-position="left"
+      >
+        <!--
+         prop 要写在el-form-item，并且prop的值要跟rules中保持一致
+        -->
         <el-form-item label="头像" prop="avatar">
+          <!--
+            action：上传的地址，它上传跟axios没有关系，它是自己封装的，地址要写全
+            data：上传时候需要传递的参数，按照接口文档，它的属性名叫 image
+            show-file-list：是否展示列表
+            before-upload：上传之前，需要做两件事，第一是格式和大小判断，第二把它里面的参数 file 赋值给
+                el-upload属性的data中的image
+            on-success：上传成功之后，需要做两件事，第一头像上传的框中的图片要变成预览图片(就是给imageUrl)
+                      第二件事情是，把上传得到的服务器地址（"file_path":"uploads/20191024/d79f16177aa4d3bf4d2e2398f41c6d68.PNG"）
+                      赋值给 registerForm.avatar
+           -->
           <el-upload
             class="avatar-uploader"
-            :action="uploadAction"
-            name="image"
+            :action="uploadUrl"
+            :data="uploadObj"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
+            :on-success="handleAvatarSuccess"
           >
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="昵称" prop="username">
-          <el-input v-model="resgisterForm.username"></el-input>
+          <el-input v-model="registerForm.username"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="resgisterForm.email"></el-input>
+          <el-input v-model="registerForm.email"></el-input>
         </el-form-item>
         <el-form-item label="手机" prop="phone">
-          <el-input v-model="resgisterForm.phone"></el-input>
+          <el-input v-model="registerForm.phone"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="resgisterForm.password" show-password></el-input>
+          <el-input v-model="registerForm.password"></el-input>
         </el-form-item>
-        <el-form-item label="图形码" prop="code">
-          <el-row>
-            <el-col :span="17">
-              <el-input v-model="resgisterForm.code"></el-input>
-            </el-col>
-            <el-col style="margin-left:10px" :span="6">
-              <img
-                class="captcha"
-                @click="changeCodeURL"
-                :src="codeURL"
-                alt=""
-              />
-            </el-col>
-          </el-row>
-        </el-form-item>
-        <el-form-item label="验证码" prop="rcode">
-          <el-row>
-            <el-col :span="17">
-              <el-input v-model.number="resgisterForm.rcode"></el-input>
-            </el-col>
-            <el-col style="margin-left:10px" :span="6">
-              <el-button @click="getRcode">获取用户验证码</el-button>
-            </el-col>
-          </el-row>
-        </el-form-item>
+        <el-row>
+          <el-col :span="17">
+            <!-- prop中虽然你在rules中设置了，但是我们el-input双向数据绑定的值，必须写在 model绑定的模型 registerForm 中 -->
+            <el-form-item label="图形码" prop="code">
+              <el-input v-model="registerForm.code"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" style="margin-left:10px;">
+            <img
+              :src="codeUrl"
+              style="width:100%;height:40px;"
+              @click="changeCodeUrl"
+              alt=""
+            />
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="17">
+            <el-form-item label="验证码" prop="rcode">
+              <el-input v-model="registerForm.rcode"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" style="margin-left:10px;">
+            <el-button @click="getRcode">获取用户验证码</el-button>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button @click="submit" type="primary"
-          >确 定</el-button
-        >
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="register">确定</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
-
-<style lang="less">
-.register {
-  .title {
-    height: 53px;
-    background: #03c0f9;
-    color: #fff;
-    text-align: center;
-    line-height: 53px;
-  }
-  .el-dialog__header {
-    padding: 0px;
-  }
-  .el-dialog__headerbtn .el-dialog__close {
-    color: #fff;
-  }
-  .captcha {
-    width: 100%;
-    height: 40px;
-  }
-  .avatar-uploader {
-    text-align: center;
-  }
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
-}
-</style>
 ```
 
 #### 登录页面中呈现出来
@@ -161,167 +131,203 @@ export default  {
 ```vue
 <script>
 export default {
-  name: "Register",
-  data() {
+  name: 'Register',
+  data () {
     return {
-      imageUrl: "", // 头像的url
-      uploadAction: process.env.VUE_APP_BASEURL + '/uploads',
-      codeURL: process.env.VUE_APP_BASEURL + "/captcha?type=sendsms",
-      dialogVisible: false,
-      resgisterForm: {
-        // 这里面的数据，将来是要提交给服务器
-        username: "", // 用户名
-        phone: "", // 手机号
-        email: "", // 邮箱
-        avatar: "", // 头像地址
-        password: "", // 密码
-        code: "", // 图形码
-        rcode: "", // 验证码
+      dialogVisible: false, // 决定Dialog显示
+      // 提交给后台的模型（后台不需要的，不要往里面写）
+      codeUrl: process.env.VUE_APP_BASEURL + 'captcha?type=sendsms', // 图形码url地址
+      uploadUrl: process.env.VUE_APP_BASEURL + 'uploads', // 上传头像的地址
+      imageUrl: '', // 要预览的头像地址
+      uploadObj: {
+        image: ''
+      }, // 上传时候需要传递的参数
+      registerForm: {
+        username: '', // 昵称
+        phone: '', // 手机号
+        email: '', // 邮箱
+        avatar: '', // 头像
+        password: '', // 密码
+        code: '', // 图形码，等下提交给后台之前，把这个属性
+        rcode: '' // 验证码
       },
+      // 验证规则
       rules: {
-        // 校验规则
-        avatar: [{ required: true, message: "头像不能为空", trigger: "blur" }],
+        avatar: [{ required: true, message: '头像不能为空', trigger: 'blur' }],
         username: [
-          { required: true, message: "用户名不能为空", trigger: "blur" },
+          { required: true, message: '昵称不能为空', trigger: 'blur' }
         ],
-        email: [
-          {
-            required: true,
-            validator: (rule, value, callback) => {
-              if (!value) {
-                callback(new Error("邮箱不能为空"));
-                return;
-              }
+        email: {
+          required: true,
+          validator: (rule, value, callback) => {
+            /**
+             * rule：规则
+             * value：用户输入的值
+             * callback：决定是否校验ok，如果里面没有接 new Error('xxxx')，callback必须调用
+             */
+            if (!value) {
+              // return 阻止代码继续往下执行
+              return callback(new Error('邮箱不能为空!'))
+            }
 
-              // 邮箱的正则
-              const reg = /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/;
-              if (!reg.test(value)) {
-                return callback(new Error("邮箱不合法!"));
-              }
+            // eslint禁用
+            /* eslint-disable */
+            const reg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/
+            // eslint启用
+            /* eslint-enable */
+            if (!reg.test(value)) {
+              // return 阻止代码继续往下执行
+              return callback(new Error('邮箱不合法!'))
+            }
 
-              callback();
-            },
-            trigger: "blur",
+            // 校验ok
+            callback()
           },
-        ],
-        phone: [
-          {
-            required: true,
-            validator: (rule, value, callback) => {
-              if (!value) {
-                callback(new Error("手机号不能为空"));
-                return;
-              }
+          trigger: 'blur'
+        },
+        phone: {
+          required: true, // 加了这个前面就会有红星星
+          validator: (rule, value, callback) => {
+            /**
+             * rule：规则
+             * value：用户输入的值
+             * callback：决定是否校验ok，如果里面没有接 new Error('xxxx')，callback必须调用
+             */
+            if (!value) {
+              // return 阻止代码继续往下执行
+              return callback(new Error('手机号不能为空!'))
+            }
 
-              // 手机的正则
-              const reg = /^1[3456789][0-9]{9}$/;
-              if (!reg.test(value)) {
-                return callback(new Error("手机号不合法!"));
-              }
+            const reg = /^1[3456789][0-9]{9}$/
+            if (!reg.test(value)) {
+              // return 阻止代码继续往下执行
+              return callback(new Error('手机号不合法!'))
+            }
 
-              callback();
-            },
-            trigger: "blur",
+            // 校验ok
+            callback()
           },
-        ],
+          trigger: 'blur'
+        },
         password: [
-          { required: true, message: "密码不能为空", trigger: "blur" },
-          { min: 6, message: "密码长度最小是6位", trigger: "blur" },
+          { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
-        code: [
-          { required: true, message: "图形码不能为空", trigger: "blur" },
-          { min: 4, max: 4, message: "图形码必须是4位", trigger: "blur" },
-        ],
-        rcode: [
-          // { required: true, message: "验证码不能为空", trigger: "blur" },
-          // { min: 4, max: 4, message: "验证码必须是4位", trigger: "blur" },
-          {
-            required: true,
-            validator: (rule, value, callback) => {
-              if (!value) {
-                return callback(new Error("验证码不能为空"));
-              }
-
-              if (!Number.isInteger(value)) {
-                return callback(new Error("验证码必须是数字"));
-              }
-
-              callback();
-            },
-            trigger: "blur",
-          },
-        ],
-      },
-    };
+        code: [{ required: true, message: '图形码不能为空', trigger: 'blur' }],
+        rcode: [{ required: true, message: '验证码不能为空', trigger: 'blur' }]
+      }
+    }
   },
   methods: {
-    changeCodeURL() {
-      this.codeURL =
-        process.env.VUE_APP_BASEURL +
-        "/captcha?type=sendsms&r=" +
-        Math.random();
+    // 重新获取图形验证码
+    changeCodeUrl () {
+      this.codeUrl = `${
+        process.env.VUE_APP_BASEURL
+      }captcha?type=sendsms&t=${new Date() - 0}`
     },
-    async getRcode() {
-      const res = await this.$axios.post("/sendsms", {
-        code: this.resgisterForm.code,
-        phone: this.resgisterForm.phone,
-      });
+    // 获取手机验证码
+    async getRcode () {
+      if (
+        this.registerForm.phone.trim().length === 0 ||
+        this.registerForm.code.trim().length === 0
+      ) {
+        this.$message({
+          message: '手机号或图形码不能为空',
+          type: 'warning'
+        })
+        return
+      }
 
-      if (res.data.code === 200) {
-        this.resgisterForm.rcode = res.data.data.captcha;
+      // 发请求
+      const res = await this.$http.post('sendsms', {
+        code: this.registerForm.code,
+        phone: this.registerForm.phone
+      })
+
+      if (res.code === 200) {
+        this.registerForm.rcode = res.data.captcha
       } else {
-        this.$message.error(res.data.message);
-        // 重新刷新验证码
-        this.changeCodeURL();
+        this.$message.error(res.message)
+        this.changeCodeUrl()
       }
-    },
-    // 图片真正上传之前的回调函数
-    beforeAvatarUpload(file) {
-      const isImage = (file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/gif");
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isImage) {
-        this.$message.error("上传头像图片只能是 JPG/PNG/GIF 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
-      }
-
-      // 如果要进行上传文件的请求，我们必须返回true，它才会进行文件上传
-      return isImage && isLt2M;
-    },
-    // 上传成功之后的回调函数
-    handleAvatarSuccess(res, file) {
-      // 给imageUrl赋值
-      this.imageUrl = process.env.VUE_APP_BASEURL + '/' + res.data.file_path
-
-      // 给registerForm中的avatar模型赋值
-      this.resgisterForm.avatar = res.data.file_path
     },
     // 注册
-    submit() {
-      // 做最后一次校验
+    register () {
+      // 全局校验
       this.$refs.registerFormRef.validate(async valid => {
         if (!valid) return
 
-        const res = await this.$axios.post('/register', this.resgisterForm)
+        // 发请求
+        // 删除掉不要的属性
+        delete this.registerForm.code
+        const res = await this.$http.post('register', this.registerForm)
 
-        if (res.data.code === 200) {
-          // 提示
+        if (res.code === 200) {
           this.$message({
             message: '注册成功~',
             type: 'success'
-          });
+          })
 
-          // 关闭掉当前窗口
+          // 关掉当前窗口
           this.dialogVisible = false
+
+          // 清空掉内容
+          this.$refs.registerFormRef.resetFields()
+          this.imageUrl = ''
         } else {
-          this.$message.error(res.data.message)
+          this.$message.error(res.message)
         }
       })
+    },
+    /**
+     * 头像上传之前的回调
+     * file：选取的文件本身
+     */
+    beforeAvatarUpload (file) {
+      const isJPG =
+        file.type === 'image/jpeg' ||
+        file.type === 'image/png' ||
+        file.type === 'image/gif'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG/PNG/GIF 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+
+      // 给上传的参数中的image赋值（千万不要忘记，否则服务器会报错说没有上传文件）
+      this.uploadObj.image = file
+
+      return isJPG && isLt2M
+    },
+    /**
+     * 上传成功之后的回调
+     * res：上传成功之后，服务器给的响应
+     *  {
+        "message":"ok",
+        "code":200,
+        "data":{
+        "file_path":"uploads/20191024/d79f16177aa4d3bf4d2e2398f41c6d68.PNG"
+        }
+      }
+      file：选取的文件本身，跟beforeAvatarUpload中的file是一样的
+     */
+    handleAvatarSuccess (res, file) {
+      // console.log(res)
+      // console.log(file)
+      if (res.code === 200) {
+        // 给要提交的模型赋值
+        this.registerForm.avatar = res.data.file_path
+        // 看预览效果，这个应该是base64的图片格式
+        this.imageUrl = URL.createObjectURL(file.raw)
+
+        // 这个是传统的给它赋值一个http的地址
+        // this.imageUrl = process.env.VUE_APP_BASEURL + res.data.file_path
+      }
     }
-  },
-};
+  }
+}
 </script>
 ```
 
@@ -398,51 +404,53 @@ export default {
 </template>
 
 <style lang="less">
-.layout {
+.el-container {
   height: 100%;
-  .header {
+}
+.header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f3f3f3;
+  .left {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #f3f3f3;
-    .left {
-      display: flex;
-      align-items: center;
-      .marginlr {
-        margin-left: 10px;
-        margin-right: 10px;
-      }
-      .title {
-        font-size: 22px;
-        color: #49a1ff;
-      }
+    .setheight {
+      font-size: 20px;
     }
-    .right {
-      display: flex;
-      align-items: center;
-      img {
-        width: 43px;
-        height: 43px;
-        margin-right: 9px;
-        border-radius: 50%;
-      }
-      .name {
-        margin-right: 38px;
-      }
+    .marginlr {
+      margin-left: 10px;
+      margin-right: 10px;
+    }
+    .title {
+      font-size: 22px;
+      color: #49a1ff;
     }
   }
-  .el-menu {
-    border-right: solid 0px #e6e6e6;
-    list-style: none;
-    position: relative;
-    margin: 0;
-    padding-left: 0;
-    background-color: #fff;
+  .right {
+    display: flex;
+    align-items: center;
+    img {
+      width: 43px;
+      height: 43px;
+      margin-right: 9px;
+      border-radius: 50%;
+    }
+    .name {
+      margin-right: 38px;
+    }
   }
-  .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
-    min-height: 400px;
-  }
+}
+.el-menu {
+  border: none;
+}
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
+}
+.main {
+  background-color: #e8e9ec;
 }
 </style>
 ```
@@ -538,8 +546,3 @@ export default {
 }
 </script>
 ```
-
-
-
-
-

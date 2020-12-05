@@ -51,7 +51,7 @@
             <span
               :style="{ color: scope.row.status === 0 ? 'red' : '#6ac144' }"
             >
-              {{ scope.row.status === 0 ? "禁用" : "启用" }}
+              {{ scope.row.status === 0 ? '禁用' : '启用' }}
             </span>
           </template>
         </el-table-column>
@@ -70,7 +70,7 @@
               :type="scope.row.status === 0 ? 'success' : 'info'"
               @click="changeStatus('/subject/status', scope.row.id)"
             >
-              {{ scope.row.status === 0 ? "启用" : "禁用" }}
+              {{ scope.row.status === 0 ? '启用' : '禁用' }}
             </el-button>
             <!-- <el-button type="danger" @click="del(scope.row.id)">删除</el-button> -->
             <el-button
@@ -101,138 +101,138 @@
 </template>
 
 <script>
-import SubjectEdit from "./subject-add-or-update";
+import SubjectEdit from './subject-add-or-update'
 // 导入混入对象
-import common from "@/mixins/common";
+import common from '@/mixins/common'
 export default {
   mixins: [common],
-  name: "Subject",
+  name: 'Subject',
   components: {
     // 局部注册
-    "subject-edit": SubjectEdit,
+    'subject-edit': SubjectEdit
   },
-  data() {
+  data () {
     return {
       searchForm: {
-        rid: "", // 学科编号
-        name: "", // 学科姓名
-        username: "", // 创建者
-        status: "", // 创建者
+        rid: '', // 学科编号
+        name: '', // 学科姓名
+        username: '', // 创建者
+        status: '' // 创建者
       },
       page: 1, // 页码
       limit: 2, // 页容量
       subjectList: [], // 学科列表数据
-      total: 0, // 总条数
-    };
+      total: 0 // 总条数
+    }
   },
-  created() {
+  created () {
     // this.getSubjectListData();
     this.getListData()
   },
   methods: {
-    async getListData() {
-      const res = await this.$axios.get("/subject/list", {
+    async getListData () {
+      const res = await this.$axios.get('/subject/list', {
         params: {
           page: this.page,
           limit: this.limit,
-          ...this.searchForm,
-        },
-      });
+          ...this.searchForm
+        }
+      })
 
       if (res.data.code === 200) {
-        this.subjectList = res.data.data.items;
-        this.total = res.data.data.pagination.total;
+        this.subjectList = res.data.data.items
+        this.total = res.data.data.pagination.total
       }
     },
     // 搜索
-    search() {
-      this.page = 1;
+    search () {
+      this.page = 1
 
-      this.getListData();
+      this.getListData()
     },
     // 清除
-    clear() {
-      this.$refs.searchFormRef.resetFields();
+    clear () {
+      this.$refs.searchFormRef.resetFields()
 
-      this.search();
+      this.search()
     },
     // 分页条的页容量发生了改变，如果是页容量发生了改变我们要从第一页开始加载
-    sizeChange(val) {
-      this.limit = val;
+    sizeChange (val) {
+      this.limit = val
 
-      this.search();
+      this.search()
     },
     // 当前的页码发生了改变
-    currentChange(val) {
-      this.page = val;
+    currentChange (val) {
+      this.page = val
 
-      this.getListData();
+      this.getListData()
     },
-    // 更改状态
-    // async changeStatus(id) {
-    //   const res = await this.$axios.post("/subject/status", { id });
+    // // // 更改状态
+    // async changeStatus (id) {
+    //   const res = await this.$axios.post('/subject/status', { id })
 
     //   if (res.data.code === 200) {
     //     // 提示
     //     this.$message({
-    //       type: "success",
-    //       message: "更新状态成功~",
-    //     });
+    //       type: 'success',
+    //       message: '更新状态成功~'
+    //     })
 
     //     // 刷新表格
-    //     this.getSubjectListData();
+    //     this.getSubjectListData()
     //   }
     // },
-    // 删除
-    // del(id) {
-    //   this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
-    //     confirmButtonText: "确定",
-    //     cancelButtonText: "取消",
-    //     type: "warning",
+    // // 删除
+    // del (id) {
+    //   this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
     //   })
     //     .then(async () => {
-    //       const res = await this.$axios.post("/subject/remove", { id });
+    //       const res = await this.$axios.post('/subject/remove', { id })
 
     //       if (res.data.code === 200) {
     //         // 提示
     //         this.$message({
-    //           type: "success",
-    //           message: "删除成功~",
-    //         });
+    //           type: 'success',
+    //           message: '删除成功~'
+    //         })
 
     //         // 刷新表格
-    //         this.search();
+    //         this.search()
     //       }
     //     })
-    //     .catch(() => {});
+    //     .catch(() => {})
     // },
     // 新增学科
-    add() {
-      this.$refs.subjectEditRef.mode = "add";
-      this.$refs.subjectEditRef.dialogVisible = true;
+    add () {
+      this.$refs.subjectEditRef.mode = 'add'
+      this.$refs.subjectEditRef.dialogVisible = true
       this.$refs.subjectEditRef.subjectForm = {
-        rid: "", // 学科编号
-        name: "", // 学科名称
-        short_name: "", // 学科简称
-        intro: "", // 学科简介
-        remark: "", // 备注
-      };
+        rid: '', // 学科编号
+        name: '', // 学科名称
+        short_name: '', // 学科简称
+        intro: '', // 学科简介
+        remark: '' // 备注
+      }
     },
     // 编辑学科
-    editSubject(row) {
-      this.$refs.subjectEditRef.mode = "edit";
+    editSubject (row) {
+      this.$refs.subjectEditRef.mode = 'edit'
       // this.$refs.subjectEditRef.subjectForm = JSON.parse(JSON.stringify(row))
-      const { id, rid, name, short_name, intro, remark } = row;
+      const { id, rid, name, short_name, intro, remark } = row
       this.$refs.subjectEditRef.subjectForm = {
         id, // 学科id
         rid, // 学科编号
         name, // 学科名称
         short_name, // 学科简称
         intro, // 学科简介
-        remark, // 备注
-      };
-      this.$refs.subjectEditRef.dialogVisible = true;
-    },
-  },
-};
+        remark // 备注
+      }
+      this.$refs.subjectEditRef.dialogVisible = true
+    }
+  }
+}
 </script>

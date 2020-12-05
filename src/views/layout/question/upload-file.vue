@@ -9,11 +9,16 @@
       :before-upload="beforeAvatarUpload"
     >
       <div v-if="type === 'video'">
-        <video v-if="value" :src="BASE_URL + '/' + value" controls class="avatar"></video>
+        <video
+          v-if="value"
+          :src="BASE_URL + '/' + value"
+          controls
+          class="avatar"
+        ></video>
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </div>
       <div v-else>
-        <img v-if="value" :src="BASE_URL + '/' + value" class="avatar"/>
+        <img v-if="value" :src="BASE_URL + '/' + value" class="avatar" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </div>
     </el-upload>
@@ -26,55 +31,55 @@ export default {
   props: {
     type: {
       type: String, // 这里表明 type 类型是字符串
-      default: "image", // 这个代表 type 的值，如果没有传递默认就是image
+      default: 'image' // 这个代表 type 的值，如果没有传递默认就是image
     },
-    value: String,
+    value: String
   },
-  data() {
+  data () {
     return {
-      BASE_URL: process.env.VUE_APP_BASEURL, // http://134.175.59.248/heimamm/public
-    };
+      BASE_URL: process.env.VUE_APP_BASEURL // http://134.175.59.248/heimamm/public
+    }
   },
   methods: {
     // 上传成功之后的回调
-    handleAvatarSuccess(res) {
+    handleAvatarSuccess (res) {
       // 1、res.data.url ===> 父组件(question-add-or-update.vue) questionForm.video
-      this.$emit("input", res.data.url);
+      this.$emit('input', res.data.url)
       // 2、让我们该子组件中的内容，根据实际情况进行渲染（有可能渲染图片、有可能渲染视频）
     },
     // 上传之前的回调(一般限制文件类型和大小)
-    beforeAvatarUpload(file) {
-      if (this.type === "video") {
+    beforeAvatarUpload (file) {
+      if (this.type === 'video') {
         // 代表上传的是视频
-        const isVideo = file.type === "video/mp4";
-        const isLt2M = file.size / 1024 / 1024 < 2;
+        const isVideo = file.type === 'video/mp4'
+        const isLt2M = file.size / 1024 / 1024 < 2
 
         if (!isVideo) {
-          this.$message.error("上传视频只能是 mp4 格式!");
+          this.$message.error('上传视频只能是 mp4 格式!')
         }
         if (!isLt2M) {
-          this.$message.error("上传视频大小不能超过 2MB!");
+          this.$message.error('上传视频大小不能超过 2MB!')
         }
-        return isVideo && isLt2M;
+        return isVideo && isLt2M
       } else {
         // 代表上传的是图片
         const isImage =
-          file.type === "image/png" ||
-          file.type === "image/jpeg" ||
-          file.type === "image/gif";
-        const isLt2M = file.size / 1024 / 1024 < 2;
+          file.type === 'image/png' ||
+          file.type === 'image/jpeg' ||
+          file.type === 'image/gif'
+        const isLt2M = file.size / 1024 / 1024 < 2
 
         if (!isImage) {
-          this.$message.error("上传文件只能是 png/jpeg/gif 格式!");
+          this.$message.error('上传文件只能是 png/jpeg/gif 格式!')
         }
         if (!isLt2M) {
-          this.$message.error("上传头像图片大小不能超过 2MB!");
+          this.$message.error('上传头像图片大小不能超过 2MB!')
         }
-        return isImage && isLt2M;
+        return isImage && isLt2M
       }
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style lang="less">

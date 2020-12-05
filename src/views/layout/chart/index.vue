@@ -41,86 +41,86 @@
 </template>
 
 <script>
-import echarts from "echarts";
+import echarts from 'echarts'
 export default {
-  name: "Chart",
-  data() {
+  name: 'Chart',
+  data () {
     return {
       titleObj: {}, // 统计人数、刷题量等
-      statistics: [], // 统计哪些企业
-    };
+      statistics: [] // 统计哪些企业
+    }
   },
-  created() {
-    this.getTitleData();
+  created () {
+    this.getTitleData()
   },
-  mounted() {
-    this.getStatisticsData();
+  mounted () {
+    this.getStatisticsData()
   },
   methods: {
-    async getTitleData() {
-      const res = await this.$axios.post("/data/title");
+    async getTitleData () {
+      const res = await this.$axios.post('/data/title')
 
       if (res.data.code === 200) {
-        this.titleObj = res.data.data;
+        this.titleObj = res.data.data
       }
     },
-    async getStatisticsData() {
-      const res = await this.$axios.post("/data/statistics");
+    async getStatisticsData () {
+      const res = await this.$axios.post('/data/statistics')
 
       if (res.data.code === 200) {
-        this.statistics = res.data.data;
+        this.statistics = res.data.data
 
         // 使用echarts进行渲染
-        this.initEcharts();
+        this.initEcharts()
       }
     },
-    initEcharts() {
+    initEcharts () {
       // 基于准备好的dom，初始化echarts实例
-      var myChart = echarts.init(this.$refs.echartsRef);
+      var myChart = echarts.init(this.$refs.echartsRef)
 
-      const legendData = this.statistics.map((item) => item.name);
+      const legendData = this.statistics.map(item => item.name)
 
       // 指定图表的配置项和数据
       var option = {
         tooltip: {
-          trigger: "item",
-          formatter: "{a} <br/>{b}: {c} ({d}%)",
+          trigger: 'item',
+          formatter: '{a} <br/>{b}: {c} ({d}%)'
         },
         legend: {
-          orient: "vertical",
+          orient: 'vertical',
           right: 60,
-          data: legendData,
+          data: legendData
         },
         series: [
           {
-            name: "访问来源",
-            type: "pie",
-            radius: ["50%", "70%"],
+            name: '访问来源',
+            type: 'pie',
+            radius: ['50%', '70%'],
             avoidLabelOverlap: false,
             label: {
               show: false,
-              position: "center",
+              position: 'center'
             },
             emphasis: {
               label: {
                 show: true,
-                fontSize: "30",
-                fontWeight: "bold",
-              },
+                fontSize: '30',
+                fontWeight: 'bold'
+              }
             },
             labelLine: {
-              show: false,
+              show: false
             },
-            data: this.statistics,
-          },
-        ],
-      };
+            data: this.statistics
+          }
+        ]
+      }
 
       // 使用刚指定的配置项和数据显示图表。
-      myChart.setOption(option);
-    },
-  },
-};
+      myChart.setOption(option)
+    }
+  }
+}
 </script>
 
 <style lang="less">

@@ -1,24 +1,5 @@
 # heimamm
 
-## Project setup
-```
-yarn install
-```
+### 后台API接口地址：
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+https://www.showdoc.com.cn/538567623707717?page_id=3183007410635536
